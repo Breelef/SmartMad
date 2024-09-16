@@ -21,7 +21,6 @@ app.post('/testAPI', async (req, res) => {
     });
 
     res.json({ response });
-
 });
 
 app.listen(port, () => {
