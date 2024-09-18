@@ -23,3 +23,22 @@ function App() {
 }
 
 export default App;
+
+
+/*
+import React from 'react';
+import Button from './components/Button'; 
+
+function App() {
+  return (
+    <div className="App">
+      <h1>My React App</h1>
+      <Button /> {Use the Button component here}
+      </div>
+    );
+  }
+  
+  export default App;
+  
+
+*/
