@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+.App.has-content {
+  padding-bottom: var(--footer-height);
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +39,20 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.footer {
+  height: var(--footer-height); /* use the footer height variable */
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.content.content-visible {
+  padding-bottom: var(--footer-height);
+}
+
+:root {
+  --footer-height: 150px; /* set the height of the footer as a CSS variable */
 }

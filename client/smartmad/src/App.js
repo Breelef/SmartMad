@@ -1,39 +1,36 @@
-
-import './App.css';
-import Button from './components/button.js'; 
-import Footer from './components/footer.js';
-import image from './image.png';
-
+import "./App.css";
+import React, { useState } from "react";
+import Button from "./components/tilbage_knap.js";
+import Footer from "./components/footer.js";
+import image from "./image.png";
+import SimilarRecipes from "./components/lignende_opskrifter_boks.js";
+import YouTubeVideo from "./components/video_guide_boks.js";
+import Ingredients from "./components/ingredienser_boks.js";
+import RecipeButton from "./components/find_opskrifter_knap.js";
 
 function App() {
+  const [hasUserTakenAction, setHasUserTakenAction] = useState(false);
+
+  const handleClick = () => {
+    setHasUserTakenAction(true);
+  };
+
   return (
-    <div className="App">
+    <div className={`App ${hasUserTakenAction ? "has-content" : ""}`}>
       <header className="App-header">
         <img src={image} className="App-logo" alt="logo" />
-        <Button></Button>
+        <RecipeButton onClick={handleClick}>Find opskrifter</RecipeButton>
       </header>
-      <Footer></Footer>
+      {hasUserTakenAction && (
+        <div>
+          <SimilarRecipes className="similar-recipes"></SimilarRecipes>
+          <YouTubeVideo className="youtube-video"></YouTubeVideo>
+          <Ingredients className="ingredients"></Ingredients>
+        </div>
+      )}
+      <Footer className="footer"></Footer>
     </div>
   );
 }
 
 export default App;
-
-
-/*
-import React from 'react';
-import Button from './components/Button'; 
-
-function App() {
-  return (
-    <div className="App">
-      <h1>My React App</h1>
-      <Button /> {Use the Button component here}
-      </div>
-    );
-  }
-  
-  export default App;
-  
-
-*/

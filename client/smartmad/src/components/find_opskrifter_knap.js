@@ -1,12 +1,12 @@
 import React from 'react';
 
-const Button = () => {
+const RecipeButton = ({ onClick, children }) => {
   const [hover, setHover] = React.useState(false);
   return (
-    <button
+    <button onClick={onClick}
       style={{
-        backgroundColor: hover ? '#87CEEB' : '#ADD8E6', // light blue
-        border: '1px solid #03055B', // dark blue
+        backgroundColor: hover ? '#34C759' : '#8BC34A',
+        border: '1px solid #2F4F2F', // dark green
         borderRadius: '5px', // rounded edges
         padding: '10px 20px',
         fontSize: '16px',
@@ -17,9 +17,9 @@ const Button = () => {
       onMouseOver={() => setHover(true)}
       onMouseOut={() => setHover(false)}
     >
-      Opret
+      Find opskrifter
     </button>
   );
 };
 
-export default Button;
+export default RecipeButton;
