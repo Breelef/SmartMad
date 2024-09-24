@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route 
-          route="find-opskrift"
+          path="/find-opskrift"
           element={
             <ProtectedRoute>
               <FindOpskriftPage />
@@ -21,6 +21,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
+    
   );
 }
 

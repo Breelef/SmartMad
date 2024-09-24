@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SimilarRecipes = () => {
+export const SimilarRecipes = () => {
   return (
     <div>
       <h3>Lignende opskrifter</h3>
@@ -13,4 +13,3 @@ const SimilarRecipes = () => {
   );
 };
 
-export default SimilarRecipes;

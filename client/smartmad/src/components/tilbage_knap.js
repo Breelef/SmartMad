@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = () => {
+export const Button = () => {
   const [hover, setHover] = React.useState(false);
   return (
     <button
@@ -21,5 +21,3 @@ const Button = () => {
     </button>
   );
 };
-
-export default Button;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Navbar = () => {
+export const Navbar = () => {
   return (
     <nav>
       <button>Opskrift 1 - Kyllinge Suppe</button>
@@ -10,5 +10,3 @@ const Navbar = () => {
     </nav>
   );
 };
-
-export default Navbar;

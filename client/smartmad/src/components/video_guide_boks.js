@@ -1,6 +1,6 @@
 import YouTube from 'react-youtube';
 
-const YouTubeVideo = () => {
+export const YouTubeVideo = () => {
   const opts = {
     height: '390',
     width: '640',
@@ -22,5 +22,3 @@ const YouTubeVideo = () => {
     </div>
   );
 };
-
-export default YouTubeVideo;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Method = () => {
+export const Method = () => {
   return (
     <div style={{ overflowY: 'scroll', maxHeight: '200px' }}>
       <h3>Fremgangsmåde</h3>
@@ -11,4 +11,3 @@ const Method = () => {
   );
 };
 
-export default Method;
