@@ -12,7 +12,7 @@ export const LoginPage = () => {
 
         if (username === "admin" && password === "admin") {
             localStorage.setItem("token", "fake-token");
-            navigate("/find-opskrift");
+            navigate("/udfyld-til-opskrift");
         } else {
             alert("Forkert brugernavn eller password");
         }
