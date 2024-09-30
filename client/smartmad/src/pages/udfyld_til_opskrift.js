@@ -1,4 +1,6 @@
 import { useState } from "react";
+import{ ChooseSelf } from "./vælg_selv.js";
+import { ClearOut } from "./ryd_ud.js";
 
 export const UdfyldTilOpskrift = () => {
     const [view, setView] = useState('self');
@@ -37,9 +39,7 @@ export const UdfyldTilOpskrift = () => {
     const VælgSelvView = () => {
       return (
         <div>
-          <h2 className="text-xl font-bold mb-4">Vælg selv View</h2>
-          <p>This is the content for Vælg selv view.</p>
-          {/* Add form sections or dropdowns here for the "Vælg selv" view */}
+            <ChooseSelf />
         </div>
       );
     };
@@ -48,9 +48,7 @@ export const UdfyldTilOpskrift = () => {
     const RydUdView = () => {
       return (
         <div>
-          <h2 className="text-xl font-bold mb-4">Ryd ud View</h2>
-          <p>This is the content for Ryd ud view.</p>
-          {/* Add a clear functionality or reset logic here for the "Ryd ud" view */}
+            <ClearOut />
         </div>
       );
     };
