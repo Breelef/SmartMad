@@ -4,6 +4,7 @@ import { DropdownWithSearch } from '../components/dropdown_med_søg.js';
 import { AddCustomOption } from '../components/tilføj_egen_mulighed.js';
 import { SelectedOptionsBox } from '../components/valgte_muligheder.js';
 import { RecipeButton } from '../components/find_opskrifter_knap.js';
+import { PeopleCounter } from "../components/portion_tæller.js";
 import { CommentsBox } from '../components/kommentar_boks.js'; // Import CommentsBox
 
 export const ChooseSelf = () => {
@@ -11,6 +12,7 @@ export const ChooseSelf = () => {
   const [carbOptions] = useState(['Pasta', 'Kartofler', 'Ris']);
   const [veggieOptions] = useState(['Løg', 'Broccoli', 'Peberfrugt']);
   const [spiceOptions] = useState(['Salt', 'Chili', 'Oregano']);
+  const [peopleCount, setPeopleCount] = useState(0);
   const navigate = useNavigate();
 
   const [selectedProtein, setSelectedProtein] = useState([]);
@@ -76,6 +78,7 @@ export const ChooseSelf = () => {
       Grøntsager: selectedVeggies,
       Comments: comments, // Include comments in the JSON
       Andet: selectedSpices,
+      Mængde: peopleCount,
     };
   };
 
@@ -89,6 +92,8 @@ export const ChooseSelf = () => {
 
   return (
       <div className="max-w-md mx-auto">
+          <label className="block mb-2 text-md font-medium">Antal portioner: </label>
+          <PeopleCounter value={peopleCount} onChange={setPeopleCount} />
           <label className="block mb-2 text-md font-medium">Vælg Protein:</label>
           <SelectedOptionsBox selectedOptions={selectedProtein}
                               onDeselect={(option) => handleDeselect(option, 'Protein')}/>
