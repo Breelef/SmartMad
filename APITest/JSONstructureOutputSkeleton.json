@@ -1,0 +1,39 @@
+{
+  "data": {
+    "recipe_id": 0,
+    "name": "",
+    "time": {
+      "prep": {
+        "value": 0,
+        "unit": "minutes"
+      },
+      "cook": {
+        "value": 0,
+        "unit": "minutes"
+      },
+      "total": {
+        "value": 0,
+        "unit": "minutes"
+      }
+    },
+    "portions": 0,
+    "ingredients": [
+      {
+        "name": "",
+        "value": 0,
+        "unit": "",
+        "number": null,
+        "comment": null
+      }
+    ],
+    "instructions": [
+      {
+        "part": "",
+        "steps": [
+          ""
+        ]
+      }
+    ],
+    "final_comment": ""
+  }
+}

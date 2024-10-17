@@ -1,0 +1,107 @@
+{
+"data": {
+  "recipe_id": 1234,
+  "name": "Kartoffelsuppe med porrer",
+  "time": {
+    "prep": {
+      "value": 15,
+      "unit": "minutes"
+    },
+    "cook": {
+      "value": 30,
+      "unit": "minutes"
+    },
+    "total": {
+      "value": 45,
+      "unit": "minutes"
+    }
+  },
+  "portions": 4,
+  "ingredients": [
+    {
+      "name": "smør",
+      "value": 10,
+      "unit": "gram"
+    },
+    {
+      "name": "løg",
+      "value": 75,
+      "unit": "gram",
+      "number": 1
+    },
+    {
+      "name": "kartofler",
+      "value": 500,
+      "unit": "gram",
+      "comment": "små tern"
+    },
+    {
+      "name": "grøntsagsbullion",
+      "value": 0.75,
+      "unit": "liter"
+    },
+    {
+      "name": "fløde",
+      "value": 1,
+      "unit": "deciliter",
+      "comment": "Enten 8% eller 15%"
+    },
+    {
+      "name": "salt",
+      "value": 1,
+      "unit": "tsk"
+    },
+    {
+      "name": "hvidpeber",
+      "value": 0.5,
+      "unit": "tsk",
+      "comment": "Friskkværnet"
+    },
+    {
+      "name": "bacon",
+      "value": 150,
+      "unit": "gram"
+    },
+    {
+      "name": "porre",
+      "value": 150,
+      "unit": "gram",
+      "comment": "Grofthakket - den grønne del"
+    },
+    {
+      "name": "brød",
+      "value": 240,
+      "unit": "gram",
+      "comment": "groft brød - evt. ristet"
+    }
+  ],
+  "instructions": [
+    {
+      "part": "suppe",
+      "steps": [
+        "Lad smørret smelte ved kraftig varme, men uden at det bruner. Svits løg og kartofler i ca. 2 min. Tilsæt porrer og svits i yderligere ca. 1 min.",
+        "Hæld bouillon ved og lad suppen koge i ca. 15 min. - eller til grøntsagerne er møre.",
+        "Blend suppen til den er jævn - enten med en stavblender eller i en almindelig blender.",
+        "Kom suppen tilbage i gryden sammen med fløde, salt og peber. Bring suppen i kog og smag den til."
+      ]
+    },
+    {
+      "part": "bacondrys",
+      "steps": [
+        "Læg bacon i en tør pande og steg ved kraftig varme i ca. 3 min. Skru ned og steg færdig ved jævn varme i ca. 5 min.",
+        "Tør panden af og steg porrer ved kraftig varme i ca. 4 min. Knus bacon let og tilsæt det til porrerne."
+      ]
+    },
+    {
+      "part": "brød",
+      "steps": [
+        "Varm brødet i en ovn eller rist det og server til suppen."
+      ]
+    }
+  ],
+    "final_comment": "Server kartoffel porresuppen med brød og bacondrys."
+  }
+}
+
+
+
