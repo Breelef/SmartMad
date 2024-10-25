@@ -46,9 +46,31 @@ export const ClearOut = () => {
   // Handle JSON submission
   const handleSubmit = () => {
     const data = createJSON();
+
     console.log('Data to submit:', JSON.stringify(data));
-    navigate('/find-opskrift');
-  };
+
+    fetch('http://localhost:8080/testAPI', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(responseData => {
+        console.log('Success:', responseData);
+        navigate('/find-opskrift');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+};
+
 
   return (
       <div className="max-w-md mx-auto">

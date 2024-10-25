@@ -1,18 +1,20 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import { generateRecipe } from "./AITest/geminiTest.js";
+import cors from "cors";
 
 
 dotenv.config()
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-const port = 3000;
+const port = 8080;
 
 app.post('/testAPI', async (req, res) => {
     try {
-        const { message } = req.body;
-        const response = await generateRecipe(message);
+        const { data } = req.body;
+        const response = await generateRecipe(data);
         console.log(response);
         res.json({ response });
     } catch (error) {
