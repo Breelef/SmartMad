@@ -36,15 +36,17 @@ export const ClearOut = () => {
   // Create JSON object
   const createJSON = () => {
     return {
-      Options: selectedOptions,
-      Comments: comments,
+        data: {
+            Ingredients: selectedOptions,
+            Comments: comments,
+        },
     };
   };
 
   // Handle JSON submission
   const handleSubmit = () => {
     const data = createJSON();
-    console.log('Data to submit:', data);
+    console.log('Data to submit:', JSON.stringify(data));
     navigate('/find-opskrift');
   };
 

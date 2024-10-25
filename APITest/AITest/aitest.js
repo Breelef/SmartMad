@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 async function initializeAI() {
   const llama = await getLlama();
   const model = await llama.loadModel({
-    modelPath: path.join(__dirname, "models", "hf_bartowski_gemma-2-2b-it-Q6_K_L.gguf")
+    modelPath: path.join(__dirname, "models", "hf_mradermacher_Meta-Llama-3.1-8B-Instruct.Q6_K.gguf")
   });
   const context = await model.createContext();
   const session = new LlamaChatSession({
