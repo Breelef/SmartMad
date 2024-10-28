@@ -11,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 const port = 8080;
 
+
 app.post('/testAPI', async (req, res) => {
     try {
         const { data } = req.body;
@@ -24,5 +25,5 @@ app.post('/testAPI', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });

@@ -59,11 +59,14 @@ Fill in all fields with appropriate content. Be creative with the recipe name, i
   return JSON.parse(response);
 }
 
-// Usage
+
 async function main() {
   const ai = await initializeAI();
-  const recipe = await generateRecipe(ai);
+  recipe = await generateRecipe(ai);
   console.log(JSON.stringify(recipe, null, 2));
 }
+
+
+
 
 main().catch(console.error);
