@@ -1,20 +1,21 @@
-// db.js
-import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+import { Sequelize } from 'sequelize';
 
 dotenv.config();
 
-// Create a MySQL connection pool
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+console.log(process.env.DB_HOST);
+console.log(process.env.DB_USER);
+
+
+const sequelize = new Sequelize({
+  host: process.env.DB_HOST,
+  dialect: 'mysql',
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  logging: false, // Optional: Disable logging to reduce console noise
 });
 
-export default pool;
+export default sequelize;
 
 
