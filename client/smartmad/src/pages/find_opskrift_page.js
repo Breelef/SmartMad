@@ -1,7 +1,51 @@
 import { useLocation } from 'react-router-dom';
 import React, { useState } from 'react';
 
-export const FindOpskriftPage = ({ providedData }) => {
+  /* Eksempel på et "recipeData" objekt:
+
+  {
+  "data": {
+    "recipe_id": 0,
+    "name": "",
+    "time": {
+      "prep": {
+        "value": 0,
+        "unit": "minutes"
+      },
+      "cook": {
+        "value": 0,
+        "unit": "minutes"
+      },
+      "total": {
+        "value": 0,
+        "unit": "minutes"
+      }
+    },
+    "portions": 0,
+    "ingredients": [
+      {
+        "name": "",
+        "value": 0,
+        "unit": "",
+        "number": null,
+        "comment": null
+      }
+    ],
+    "instructions": [
+      {
+        "part": "",
+        "steps": [
+          ""
+        ]
+      }
+    ],
+    "final_comment": ""
+  }
+}
+
+  /*/
+
+export const FindOpskriftPage = () => {
 
 
   const [showVideo, setShowVideo] = useState(false);
@@ -13,6 +57,9 @@ export const FindOpskriftPage = ({ providedData }) => {
   const { data } = location.state;
 
   const recipeData = data.response.data
+
+
+  //console.log(recipeData.)
   
 
   return (
@@ -29,10 +76,20 @@ export const FindOpskriftPage = ({ providedData }) => {
       {/* Recipe Title */}
       <h1 className="text-white text-3xl font-bold mt-4">{recipeData.name}</h1>
 
-      {/* Ingredients */}
+      {/* Tid */}
+      <div className="bg-gray-200 max-w-4xl w-full max-w-md mt-6 p-6 rounded-md text-center shadow-lg">
+        <h2 className="text-xl font-bold mb-4">Tid</h2>
+        <ul className="text-left list-disc list-inside text-left space-y-1">
+          <li>Forberedelsestid: {recipeData.time.prep.value} {recipeData.time.prep.unit}</li>
+          <li>kogetid: {recipeData.time.cook.value} {recipeData.time.cook.unit}</li>
+          <li>Total: {recipeData.time.total.value} {recipeData.time.total.unit}</li>
+         </ul>  
+      </div>
+
+      {/* Ingredients */} 
       <div className="bg-gray-200 max-w-4xl w-full max-w-md mt-6 p-6 rounded-md text-center shadow-lg">
         <h2 className="text-xl font-bold mb-4">Ingredienser</h2>
-        <ul className="text-center list-disc list-inside text-left space-y-1">
+        <ul className="text-left list-disc list-inside text-left space-y-1">
           {recipeData.ingredients.map((ingredient, index) => (
             <li key={index}>
               {ingredient.value} {ingredient.unit} {ingredient.name}

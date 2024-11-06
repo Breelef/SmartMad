@@ -51,7 +51,7 @@ Your response should be in JSON format and in danish language and follow this sc
 ${JSON.stringify(outputStructure, null, 2)}
 
 Fill in all fields with appropriate content. Be creative with the recipe name, ingredients, and instructions while staying true to the user's input and preferences. Ensure that your response is a valid JSON object.
-If the measurements is in fractions then convert them to decimals`;
+If the measurements is in fractions then convert them to decimals, If the recipe includes any kind of meat that needs preparation, also add the process of preparing it as a part of the preparation steps.`;
 
   const result = await model.generateContent(prompt);
   const cleanedText = cleanText(result.response.text());

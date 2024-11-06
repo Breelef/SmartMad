@@ -64,7 +64,7 @@ export const ClearOut = () => {
     })
     .then(responseData => {
         console.log('Success:', responseData);
-        navigate('/find-opskrift', { state: { data: responseData } });
+        navigate('/find-opskrift', { state: { data: responseData } }); //Send data til FindOpskrift
     })
     .catch(error => {
         console.error('Error:', error);
