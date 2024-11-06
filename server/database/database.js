@@ -3,9 +3,6 @@ import { Sequelize } from 'sequelize';
 
 dotenv.config();
 
-console.log(process.env.DB_HOST);
-console.log(process.env.DB_USER);
-
 
 const sequelize = new Sequelize({
   host: process.env.DB_HOST,

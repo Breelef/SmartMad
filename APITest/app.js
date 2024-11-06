@@ -18,12 +18,6 @@ app.post('/testAPI', async (req, res) => {
         const { data } = req.body;
         const response = await generateRecipe(data);
 
-        console.log(JSON.stringify(response, null, 2));
-        console.log("name:", response.data.name);
-        console.log("prep:", response.data.time.prep.value);
-
-
-
         const userId = 1;
         const recipeId = await addRecipe(userId, response);
         await addIngredients(recipeId, response.data.ingredients);
