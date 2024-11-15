@@ -1,33 +1,27 @@
-// models/Ingredient.js
-import { DataTypes } from "sequelize";
-import sequelize from "../database/database.js";
-import Recipe from "./recipe.js";
+'use strict';
+import { Model } from "sequelize";
 
-const Ingredient = sequelize.define("Ingredient", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  value: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  unit: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  comment: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-});
+module.exports = (sequelize, DataTypes) => {
+  class Ingredient extends Model {
+    static associate(models) {
+      Ingredient.hasMany(models.RecipeIngredient, { foreignKey: 'ingredient_id', as: 'recipeIngredients' });
+      Ingredient.belongsToMany(models.Recipe, {
+        through: models.RecipeIngredient, // Use the RecipeIngredient model here
+        foreignKey: 'ingredient_id',
+        as: 'recipes'
+      });
+    }
+  }
 
-// Define foreign key relationship
-Ingredient.belongsTo(Recipe, { foreignKey: "recipe_id", onDelete: "CASCADE" });
+  Ingredient.init({
+    name: { type: DataTypes.STRING, allowNull: false },
+  }, {
+    sequelize,
+    modelName: 'Ingredient',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  });
 
-export default Ingredient;
+  return Ingredient;
+};

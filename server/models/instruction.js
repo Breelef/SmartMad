@@ -1,25 +1,24 @@
-// models/Instruction.js
-import { DataTypes } from "sequelize";
-import sequelize from "../database/database.js";
-import Recipe from "./recipe.js";
+'use strict';
+import { Model } from "sequelize";
 
-const Instruction = sequelize.define("Instruction", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  part: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  step: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+module.exports = (sequelize, DataTypes) => {
+  class Instruction extends Model {
+    static associate(models) {
+      Instruction.belongsTo(models.Recipe, { foreignKey: 'recipe_id', as: 'recipe' });
+    }
+  }
 
-// Define foreign key relationship
-Instruction.belongsTo(Recipe, { foreignKey: "recipe_id", onDelete: "CASCADE" });
+  Instruction.init({
+    recipe_id: { type: DataTypes.INTEGER, allowNull: false },
+    part: { type: DataTypes.STRING, allowNull: false },
+    steps: { type: DataTypes.JSON, allowNull: false },
+  }, {
+    sequelize,
+    modelName: 'Instruction',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  });
 
-export default Instruction;
+  return Instruction;
+};

@@ -1,41 +1,40 @@
-// models/Recipe.js
-import { DataTypes } from "sequelize";
-import sequelize from "../database/database.js";
-import User from "./user.js";
+'use strict';
+import { Model } from "sequelize";
 
-const Recipe = sequelize.define("Recipe", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  prep_time: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  cook_time: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  total_time: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  portions: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  final_comment: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-});
+module.exports = (sequelize, DataTypes) => {
+  class Recipe extends Model {
+    static associate(models) {
+      Recipe.belongsTo(models.AIResponse, { foreignKey: 'ai_response_id', as: 'aiResponse' });
+      Recipe.hasMany(models.Instruction, { foreignKey: 'recipe_id', as: 'instructions' });
+      Recipe.hasMany(models.RecipeIngredient, { foreignKey: 'recipe_id', as: 'recipeIngredients' });
+      Recipe.hasMany(models.RecipeModification, { foreignKey: 'recipe_id', as: 'modifications' });
+      Recipe.belongsToMany(models.User, {
+        through: 'Users_Recipes',
+        foreignKey: 'recipe_id',
+        as: 'users'
+      });
+      Recipe.belongsToMany(models.Ingredient, {
+        through: models.RecipeIngredient,
+        foreignKey: 'recipe_id',
+        as: 'ingredients'
+      });
+    }
+  }
 
-// Define foreign key relationship
-Recipe.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
+  Recipe.init({
+    ai_response_id: { type: DataTypes.INTEGER, allowNull: false },
+    name: { type: DataTypes.STRING, allowNull: false },
+    prep: { type: DataTypes.INTEGER, allowNull: false },
+    cook: { type: DataTypes.INTEGER, allowNull: false },
+    portion_size: { type: DataTypes.INTEGER, allowNull: false },
+    final_comment: { type: DataTypes.TEXT, allowNull: false },
+  }, {
+    sequelize,
+    modelName: 'Recipe',
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
+  });
 
-export default Recipe;
+  return Recipe;
+};
