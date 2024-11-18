@@ -53,3 +53,19 @@ Password: `admin_password`
 Username: `customer`  
 Password: `customer_password`
 
+## User privileges and creation SQL statements
+``` sql
+CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY 'admin_password';
+```
+``` sql
+GRANT ALL PRIVILEGES ON smartrecipe.* TO 'admin'@'localhost';
+```
+``` sql
+-- Create the customer user (you can set limited privileges if needed)
+    CREATE USER IF NOT EXISTS 'customer'@'localhost' IDENTIFIED BY 'customer_password';
+```
+``` sql
+GRANT SELECT, INSERT, UPDATE ON smartrecipe.users TO 'customer'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.user_prompts TO 'customer'@'localhost';
+```
+
