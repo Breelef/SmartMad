@@ -9,6 +9,10 @@ Before you start, ensure that you have the following installed:
 ```bash
 cd .\server\
 ```
+While being in the server folder, install the node modules with the command:
+```bash
+npm i
+```
 
 ## 1. Set up your `.env` file
 
