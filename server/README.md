@@ -45,7 +45,8 @@ npm run initdb
 
 ### Step 4: You can use these SQL users
 We have populated our sql server with these users for testing purposes:
-**ADMIN"**  
+
+**ADMIN**  
 Username: `admin`  
 Password: `admin_password`
 
