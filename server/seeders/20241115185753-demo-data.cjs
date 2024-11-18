@@ -169,7 +169,7 @@ module.exports = {
     await queryInterface.bulkDelete('AIResponses', null, {});
     await queryInterface.bulkDelete('Recipes', null, {});
     await queryInterface.bulkDelete('Instructions', null, {});
-    await queryInterface.bulkDelete('RecipeIngredients', null, {});
+    await queryInterface.bulkDelete('Recipe_ingredients', null, {});
     await queryInterface.bulkDelete('RecipeModifications', null, {});
     await queryInterface.bulkDelete('ModificationResponses', null, {});
   },

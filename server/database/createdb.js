@@ -14,17 +14,24 @@ const connection = mysql.createConnection({
 });
 
 const sqlCommands = `
+    -- Create the database if it doesn't exist
     CREATE DATABASE IF NOT EXISTS smartrecipe;
+
     USE smartrecipe;
     
-    -- Create SQL user 'admin' with full privileges
+    -- Drop the admin user if it already exists (optional, if you're sure you want to recreate it)
+    DROP USER IF EXISTS 'admin'@'localhost';
+    
+    -- Create the admin user with a password
     CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY 'admin_password';
+    
+    -- Grant all privileges on the smartrecipe database to the admin user
     GRANT ALL PRIVILEGES ON smartrecipe.* TO 'admin'@'localhost';
     
-    -- Create SQL user 'customer' with limited privileges
+    -- Create the customer user (you can set limited privileges if needed)
     CREATE USER IF NOT EXISTS 'customer'@'localhost' IDENTIFIED BY 'customer_password';
-
-    -- Apply privilege changes
+    
+    -- Apply the changes by flushing privileges
     FLUSH PRIVILEGES;
 `;
 
