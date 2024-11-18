@@ -44,12 +44,12 @@ npm run initdb
 ```
 
 ### Step 4: You can use these SQL users
-We have populated our sql server with these users:
-**"ADMIN" and "USER"**  
+We have populated our sql server with these users for testing purposes:
+**ADMIN"**  
 Username: `admin`  
 Password: `admin_password`
 
-**CUSTOMER USER:**  
+**CUSTOMER**  
 Username: `customer`  
 Password: `customer_password`
 
@@ -61,11 +61,10 @@ CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY 'admin_password';
 GRANT ALL PRIVILEGES ON smartrecipe.* TO 'admin'@'localhost';
 ```
 ``` sql
--- Create the customer user (you can set limited privileges if needed)
-    CREATE USER IF NOT EXISTS 'customer'@'localhost' IDENTIFIED BY 'customer_password';
+CREATE USER IF NOT EXISTS 'customer'@'localhost' IDENTIFIED BY 'customer_password';
 ```
 ``` sql
 GRANT SELECT, INSERT, UPDATE ON smartrecipe.users TO 'customer'@'localhost';
-    GRANT SELECT, INSERT, UPDATE ON smartrecipe.user_prompts TO 'customer'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON smartrecipe.user_prompts TO 'customer'@'localhost';
 ```
 
