@@ -5,8 +5,7 @@
 Before you start, ensure that you have the following installed:
 - Node.js
 - MySQL or MariaDB server running
-
-## Before you begin, cd into the server folder
+- And make sure you are in the server folder. With the following command:
 ```bash
 cd .\server\
 ```
