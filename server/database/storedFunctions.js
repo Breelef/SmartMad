@@ -1,18 +1,24 @@
 import mysql from "mysql2";
-import configFile from '../config/config.json' assert { type: 'json' };
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Get the environment variable
 const env = process.env.NODE_ENV || 'development';
 
-// Access the configuration for the current environment
-const config = configFile[env];
-const connection = mysql.createConnection({
-    host: config.host,
-    user: config.username,
-    password: config.password,
-    database: config.database,
+// Use environment variables directly instead of config.json
+const config = {
+    host: process.env.DB_HOST || '127.0.0.1',
+    user: process.env.DB_USERNAME || 'root',
+    password: process.env.DB_PASSWORD || null,
+    database: process.env.DB_DATABASE || 'smartrecipe',
+    port: process.env.DB_PORT || 3306,
     multipleStatements: true
-});
+};
+
+// Create the MySQL connection using the config object
+const connection = mysql.createConnection(config);
 
 const functionsAndProceduresSQL = `
   -- Function to calculate total time (prep + cook)
@@ -26,14 +32,14 @@ const functionsAndProceduresSQL = `
   -- Stored procedure to get a recipe by ID
   CREATE PROCEDURE get_recipe_by_id(IN recipe_id INT)
   BEGIN
-      SELECT * FROM Recipes WHERE id = recipe_id;
+      SELECT * FROM recipes WHERE id = recipe_id;
   END;
 `;
 
 const triggersSQL = `
   -- Trigger to automatically update the timestamp on record update
   CREATE TRIGGER before_recipe_update
-  BEFORE UPDATE ON Recipes
+  BEFORE UPDATE ON recipes
   FOR EACH ROW
   BEGIN
       SET NEW.updated_at = NOW();
@@ -42,14 +48,14 @@ const triggersSQL = `
 
 const viewsSQL = `
   CREATE VIEW recipe_times AS
-  SELECT id, name, total_time(prep, cook) AS total_recipe_time FROM Recipes;
+  SELECT id, name, total_time(prep, cook) AS total_recipe_time FROM recipes;
 `;
 
 const eventsSQL = `
   CREATE EVENT IF NOT EXISTS delete_old_deleted_recipes
   ON SCHEDULE EVERY 1 DAY
   DO
-    DELETE FROM Recipes
+    DELETE FROM recipes
     WHERE deleted_at IS NOT NULL
       AND deleted_at < NOW() - INTERVAL 1 YEAR;
 `;
