@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const { faker } = require('@faker-js/faker');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -6,9 +6,9 @@ module.exports = {
     await queryInterface.bulkInsert(
       'Users',
       [...Array(5)].map(() => ({
-        name: faker.faker.person.fullName(),
-        email: faker.faker.internet.email(),
-        password: faker.faker.internet.password(),
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
         created_at: new Date(),
         updated_at: new Date(),
       })),
@@ -25,7 +25,7 @@ module.exports = {
     await queryInterface.bulkInsert(
       'Ingredients',
       [...Array(10)].map(() => ({
-        name: faker.faker.commerce.productName(),
+        name: faker.commerce.productName(),
         created_at: new Date(),
         updated_at: new Date(),
       })),
@@ -43,7 +43,19 @@ module.exports = {
       'UserPrompts',
       users.map((user) => ({
         user_id: user.id,
-        prompt: JSON.stringify({ text: faker.faker.lorem.sentence() }),
+        prompt: JSON.stringify({
+          data: {
+            ingredients: [
+              faker.commerce.productName(),
+              faker.commerce.productName(),
+              faker.commerce.productName(),
+            ],
+            willing_to_shop: faker.datatype.boolean(),
+            comments: faker.lorem.sentence(),
+            dietary_restrictions: [],
+            cooking_time: faker.helpers.arrayElement(['any', 'short', 'medium', 'long']),
+          },
+        }),
         created_at: new Date(),
         updated_at: new Date(),
       })),
@@ -61,7 +73,42 @@ module.exports = {
       'AIResponses',
       userPrompts.map((userPrompt) => ({
         user_prompt_id: userPrompt.id,
-        response: JSON.stringify({ text: faker.faker.lorem.sentence() }),
+        response: JSON.stringify({
+          data: {
+            recipe_id: 0,
+            name: '',
+            time: {
+              prep: {
+                value: 0,
+                unit: 'minutes',
+              },
+              cook: {
+                value: 0,
+                unit: 'minutes',
+              },
+              total: {
+                value: 0,
+                unit: 'minutes',
+              },
+            },
+            portions: 0,
+            ingredients: [
+              {
+                name: '',
+                value: 0,
+                unit: '',
+                comment: null,
+              },
+            ],
+            instructions: [
+              {
+                part: '',
+                steps: [''],
+              },
+            ],
+            final_comment: '',
+          },
+        }),
         created_at: new Date(),
         updated_at: new Date(),
       })),
@@ -79,11 +126,11 @@ module.exports = {
       'Recipes',
       aiResponses.map((aiResponse) => ({
         ai_response_id: aiResponse.id,
-        name: faker.faker.commerce.productName(),
-        prep: faker.faker.number.int({ min: 5, max: 30 }),
-        cook: faker.faker.number.int({ min: 5, max: 30 }),
-        portion_size: faker.faker.number.int({ min: 2, max: 8 }),
-        final_comment: faker.faker.lorem.paragraph(),
+        name: faker.commerce.productName(),
+        prep: faker.number.int({ min: 5, max: 30 }),
+        cook: faker.number.int({ min: 5, max: 30 }),
+        portion_size: faker.number.int({ min: 2, max: 8 }),
+        final_comment: faker.lorem.paragraph(),
         created_at: new Date(),
         updated_at: new Date(),
       })),
@@ -101,8 +148,8 @@ module.exports = {
       'Instructions',
       recipes.map((recipe) => ({
         recipe_id: recipe.id,
-        part: 'Step 1',
-        steps: JSON.stringify({ text: faker.faker.lorem.sentence() }),
+        part: faker.number.int({ min: 5, max: 30 }),
+        steps: JSON.stringify({ text: faker.lorem.sentence() }),
         created_at: new Date(),
         updated_at: new Date(),
       })),
@@ -113,14 +160,14 @@ module.exports = {
     await queryInterface.bulkInsert(
       'recipe_ingredients',
       [...Array(10)].map(() => {
-        const recipe = recipes[faker.faker.number.int({ min: 0, max: recipes.length - 1 })];
-        const ingredient = ingredients[faker.faker.number.int({ min: 0, max: ingredients.length - 1 })];
+        const recipe = recipes[faker.number.int({ min: 0, max: recipes.length - 1 })];
+        const ingredient = ingredients[faker.number.int({ min: 0, max: ingredients.length - 1 })];
         return {
           recipe_id: recipe.id,
           ingredient_id: ingredient.id,
-          value: faker.faker.number.int({ min: 1, max: 100 }),
+          value: faker.number.int({ min: 1, max: 100 }),
           unit: 'g',
-          comment: faker.faker.lorem.sentence(),
+          comment: faker.lorem.sentence(),
           created_at: new Date(),
           updated_at: new Date(),
         };
@@ -169,7 +216,7 @@ module.exports = {
     await queryInterface.bulkDelete('AIResponses', null, {});
     await queryInterface.bulkDelete('Recipes', null, {});
     await queryInterface.bulkDelete('Instructions', null, {});
-    await queryInterface.bulkDelete('RecipeIngredients', null, {});
+    await queryInterface.bulkDelete('Recipe_ingredients', null, {});
     await queryInterface.bulkDelete('RecipeModifications', null, {});
     await queryInterface.bulkDelete('ModificationResponses', null, {});
   },
