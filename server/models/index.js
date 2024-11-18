@@ -1,17 +1,29 @@
 'use strict';
 
-
 import fs from "fs";
 import path from "path";
 import { Sequelize } from "sequelize";
 import * as process from "process";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
+// Read database configuration from environment variables
+const config = {
+  username: process.env[`DB_USERNAME_${env.toUpperCase()}`] || process.env.DB_USERNAME,
+  password: process.env[`DB_PASSWORD_${env.toUpperCase()}`] || process.env.DB_PASSWORD,
+  database: process.env[`DB_DATABASE_${env.toUpperCase()}`] || process.env.DB_DATABASE,
+  host: process.env[`DB_HOST_${env.toUpperCase()}`] || process.env.DB_HOST,
+  dialect: process.env[`DB_DIALECT_${env.toUpperCase()}`] || process.env.DB_DIALECT,
+};
+
 let sequelize;
-if (config.use_env_variable) {
+if (process.env[config.use_env_variable]) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);

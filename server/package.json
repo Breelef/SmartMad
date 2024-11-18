@@ -2,14 +2,16 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate:refresh": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate",
+    "alldb": "node database/deletedb.js && npm run migrate",
+    "migrate:refresh": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
     "migrate": "node database/createdb.js && npx sequelize-cli db:migrate && node database/grantPrivileges.js",
-    "seed:refresh": "npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all --debug",
-    "seed": "npx sequelize-cli db:seed:all --debug"
+    "seed:refresh": "npx sequelize-cli db:seed:undo:all && node database/clearFunctionsAndViews.js && npm run seed",
+    "seed": "npx sequelize-cli db:seed:all --debug && node database/storedFunctions.js",
+    "initdb": "npm run alldb && npm run seed"
   },
   "keywords": [],
   "author": "",

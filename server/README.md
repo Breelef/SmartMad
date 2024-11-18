@@ -1,16 +1,40 @@
-# Running Smartmad backend and database
+# Database Setup and Population Guide
 
-## Database migrations
+## Prerequisites
 
-cd into the server folder and enter: **npm i**
+Before you start, ensure that you have the following installed:
+- Node.js
+- MySQL or MariaDB server running
 
-Run the command: **npx sequelize-cli db:migrate**
+## 1. Set up your `.env` file
 
-After the migration is finished start the seeding procedure with the command: **npx sequelize-cli db:seed:all**
+To begin, create a `.env` file at the root of your project (if it doesn't already exist). This file will store your database credentials and other environment-specific variables.
 
+Add the following environment variables to your `.env` file:
 
-## Database Users
+```env
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
+DB_DATABASE=smartrecipe
+DB_HOST=your_database_host
+DB_DIALECT=mysql
+DB_PORT=3306
+```
 
-Username: **admin** Password: **admin** Privileges: ALL
+### Step 2: Populate the Database
+Run the following command to populate your database:
 
-Username: **customer** Password: **123**(Will be changed later based on the customers ow password) **Privileges**: SELECT, UPDATE and INSERT in the users and userprompts tables
+```bash
+npm run initdb
+```
+
+### Step 3: You can use these SQL users
+We have populated our sql server with these users:
+**ADMIN USER:**  
+Username: `admin`  
+Password: `admin_password`
+
+**CUSTOMER USER:**  
+Username: `customer`  
+Password: `customer_password`
+
