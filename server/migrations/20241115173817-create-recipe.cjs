@@ -2,9 +2,9 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Recipes', {
+    await queryInterface.createTable('recipes', {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-      ai_response_id: { type: Sequelize.INTEGER, allowNull: false, references: { model: 'AIResponses', key: 'id' }, onDelete: 'CASCADE' },
+      ai_response_id: { type: Sequelize.INTEGER, allowNull: false, references: { model: 'ai_responses', key: 'id' }, onDelete: 'CASCADE' },
       name: { type: Sequelize.STRING, allowNull: false },
       prep: { type: Sequelize.INTEGER, allowNull: false },
       cook: { type: Sequelize.INTEGER, allowNull: false },
@@ -16,6 +16,6 @@ module.exports = {
     });
   },
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Recipes');
+    await queryInterface.dropTable('recipes');
   }
 };

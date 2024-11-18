@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Insert fake Users
     await queryInterface.bulkInsert(
-      'Users',
+      'users',
       [...Array(5)].map(() => ({
         name: faker.person.fullName(),
         email: faker.internet.email(),
@@ -17,13 +17,13 @@ module.exports = {
 
     // Retrieve inserted Users with their IDs
     const users = await queryInterface.sequelize.query(
-      `SELECT id FROM Users;`,
+      `SELECT id FROM users;`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
     // Insert fake Ingredients
     await queryInterface.bulkInsert(
-      'Ingredients',
+      'ingredients',
       [...Array(10)].map(() => ({
         name: faker.commerce.productName(),
         created_at: new Date(),
@@ -34,13 +34,13 @@ module.exports = {
 
     // Retrieve inserted Ingredients with their IDs
     const ingredients = await queryInterface.sequelize.query(
-      `SELECT id FROM Ingredients;`,
+      `SELECT id FROM ingredients;`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
     // Insert fake UserPrompts
     await queryInterface.bulkInsert(
-      'UserPrompts',
+      'user_prompts',
       users.map((user) => ({
         user_id: user.id,
         prompt: JSON.stringify({
@@ -64,13 +64,13 @@ module.exports = {
 
     // Retrieve inserted UserPrompts with their IDs
     const userPrompts = await queryInterface.sequelize.query(
-      `SELECT id FROM UserPrompts;`,
+      `SELECT id FROM user_prompts;`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
-    // Insert fake AIResponses
+    // Insert fake ai_responses
     await queryInterface.bulkInsert(
-      'AIResponses',
+      'ai_responses',
       userPrompts.map((userPrompt) => ({
         user_prompt_id: userPrompt.id,
         response: JSON.stringify({
@@ -115,15 +115,15 @@ module.exports = {
       {}
     );
 
-    // Retrieve inserted AIResponses with their IDs
+    // Retrieve inserted ai_responses with their IDs
     const aiResponses = await queryInterface.sequelize.query(
-      `SELECT id FROM AIResponses;`,
+      `SELECT id FROM ai_responses;`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
     // Insert fake Recipes
     await queryInterface.bulkInsert(
-      'Recipes',
+      'recipes',
       aiResponses.map((aiResponse) => ({
         ai_response_id: aiResponse.id,
         name: faker.commerce.productName(),
@@ -139,13 +139,13 @@ module.exports = {
 
     // Retrieve inserted Recipes with their IDs
     const recipes = await queryInterface.sequelize.query(
-      `SELECT id FROM Recipes;`,
+      `SELECT id FROM recipes;`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
     // Insert fake Instructions
     await queryInterface.bulkInsert(
-      'Instructions',
+      'instructions',
       recipes.map((recipe) => ({
         recipe_id: recipe.id,
         part: faker.number.int({ min: 5, max: 30 }),
@@ -177,7 +177,7 @@ module.exports = {
 
     // Insert fake RecipeModifications
     await queryInterface.bulkInsert(
-      'RecipeModifications',
+      'recipe_modifications',
       recipes.map((recipe, index) => ({
         recipe_id: recipe.id,
         user_prompt_id: userPrompts[index % userPrompts.length].id,
@@ -190,13 +190,13 @@ module.exports = {
 
     // Retrieve inserted RecipeModifications with their IDs
     const recipeModifications = await queryInterface.sequelize.query(
-      `SELECT id FROM RecipeModifications;`,
+      `SELECT id FROM recipe_modifications;`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
     // Insert fake ModificationResponses
     await queryInterface.bulkInsert(
-      'ModificationResponses',
+      'modification_responses',
       aiResponses.map((aiResponse, index) => ({
         ai_response_id: aiResponse.id,
         modification_id: recipeModifications[index % recipeModifications.length].id,
@@ -210,14 +210,14 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     // Rollback all data insertions
-    await queryInterface.bulkDelete('Users', null, {});
-    await queryInterface.bulkDelete('Ingredients', null, {});
-    await queryInterface.bulkDelete('UserPrompts', null, {});
-    await queryInterface.bulkDelete('AIResponses', null, {});
-    await queryInterface.bulkDelete('Recipes', null, {});
-    await queryInterface.bulkDelete('Instructions', null, {});
-    await queryInterface.bulkDelete('Recipe_ingredients', null, {});
-    await queryInterface.bulkDelete('RecipeModifications', null, {});
-    await queryInterface.bulkDelete('ModificationResponses', null, {});
+    await queryInterface.bulkDelete('users', null, {});
+    await queryInterface.bulkDelete('ingredients', null, {});
+    await queryInterface.bulkDelete('user_prompts', null, {});
+    await queryInterface.bulkDelete('ai_responses', null, {});
+    await queryInterface.bulkDelete('recipes', null, {});
+    await queryInterface.bulkDelete('instructions', null, {});
+    await queryInterface.bulkDelete('recipe_ingredients', null, {});
+    await queryInterface.bulkDelete('recipe_modifications', null, {});
+    await queryInterface.bulkDelete('modification_responses', null, {});
   },
 };

@@ -6,10 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Recipe.belongsTo(models.AIResponse, { foreignKey: 'ai_response_id', as: 'aiResponse' });
       Recipe.hasMany(models.Instruction, { foreignKey: 'recipe_id', as: 'instructions' });
-      Recipe.hasMany(models.RecipeIngredient, { foreignKey: 'recipe_id', as: 'recipeIngredients' });
+      Recipe.hasMany(models.RecipeIngredient, { foreignKey: 'recipe_id', as: 'recipe_ingredients' });
       Recipe.hasMany(models.RecipeModification, { foreignKey: 'recipe_id', as: 'modifications' });
       Recipe.belongsToMany(models.User, {
-        through: 'Users_Recipes',
+        through: 'users_recipes',
         foreignKey: 'recipe_id',
         as: 'users'
       });

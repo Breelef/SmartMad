@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasMany(models.UserPrompt, { foreignKey: 'user_id', as: 'prompts' });
       User.belongsToMany(models.Recipe, {
-        through: 'Users_Recipes',
+        through: 'users_recipes',
         foreignKey: 'user_id',
         as: 'recipes'
       });

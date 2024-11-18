@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     comment: { type: DataTypes.TEXT, allowNull: true },
   }, {
     sequelize,
-    modelName: 'RecipeIngredient',
+    modelName: 'recipeingredient',
     timestamps: true,
     paranoid: true,
     underscored: true,
