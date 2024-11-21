@@ -12,7 +12,7 @@ mongodb://localhost:27017/
 Navigate to the `server` directory and install the required dependencies:
 
 ```bash
-npm install
+npm i
 ```
 
 ### 3. Run the Seed Script
