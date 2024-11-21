@@ -22,4 +22,4 @@ Go to the MongoDB directory and run the seed script:
 node seed.js
 ```
 
-This will seed the database with the necessary data.
+This will create a database "Smartrecipe" and seed the database with the necessary data.
