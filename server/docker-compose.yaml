@@ -13,16 +13,30 @@ services:
     ports:
       - "3307:3306"
     volumes:
+      - ./Server/database:/docker-entrypoint-initdb.d  # Populate MySQL with initial scripts
       - mysql_data:/var/lib/mysql
-      - ./init:/docker-entrypoint-initdb.d
     networks:
-      - mysql_network
+      - app_network
+
+  mongodb:
+    build:
+      context: ./mongoDB
+      dockerfile: Dockerfile-mongo
+    container_name: mongodb_container
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app_network
 
 volumes:
   mysql_data:
+  mongodb_data:
 
 networks:
-  mysql_network:
+  app_network:
     driver: bridge
 
 
