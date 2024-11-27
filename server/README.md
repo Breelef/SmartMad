@@ -27,6 +27,10 @@ DB_DATABASE=smartrecipe
 DB_HOST=your_database_host
 DB_DIALECT=mysql
 DB_PORT=3306
+
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=password
 ```
 
 ### Step 2: Create a sql container with Docker
@@ -62,7 +66,7 @@ mysql -u <DB_USERNAME> -p
 ```
 When the bash asks for the password, enter <DB_PASSWORD>
 
-DB_USERNAME and DB_PASSWORD are the password and user that you set ine the .env file in step 1
+DB_USERNAME and DB_PASSWORD are the user and password that you set in the .env file in step 1
 
 Alternatively you can use the preset users mentioned in step 4, if you want limited/all privileges.
 
@@ -72,9 +76,27 @@ From here you are able to execute SQL commands like "show databases;"
 ```bash
 mongosh
 ```
-Since there are no users, from here you are able to execute mongoDB commands like "show dbs"
+Since there are no users, from here you are able to execute mongoDB commands like 
 
-## User privileges and creation SQL statements
+```bash
+show dbs
+```
+
+### NEO4J
+
+```bash
+cypher-shell -u <NEO4J_USERNAME> -p <NEO4J_PASSWORD>
+```
+
+NEO4J_USERNAME and NEO4J_PASSWORD are the user and password that you set in the .env file in step 1
+
+Since there are no users, from here you are able to execute mongoDB commands like 
+
+```bash
+MATCH (n) RETURN n LIMIT 25;
+```
+
+## SQL User privileges and creation statements
 ``` sql
 CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY 'admin_password';
 ```

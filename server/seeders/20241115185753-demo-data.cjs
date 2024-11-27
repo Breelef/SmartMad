@@ -206,6 +206,7 @@ module.exports = {
       })),
       {}
     );
+    console.log("All MYSQL data seeded");
   },
 
   down: async (queryInterface, Sequelize) => {
