@@ -54,6 +54,24 @@ Password: `admin_password`
 Username: `customer`  
 Password: `customer_password`
 
+## Enter and access database collections
+
+DB_USERNAME and DB_PASSWORD are the password and user that you set ine the .env file in step 1
+
+### MYSQL
+```bash
+mysql -u <DB_USERNAME> -p
+```
+When the bash asks for the password, enter <DB_PASSWORD>
+
+From here you are able to execute SQL commands like "show databases;"
+
+### MongoDB
+```bash
+mongosh
+```
+From here you are able to execute mongoDB commands like "show dbs"
+
 ## User privileges and creation SQL statements
 ``` sql
 CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY 'admin_password';
