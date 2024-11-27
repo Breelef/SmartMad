@@ -56,13 +56,15 @@ Password: `customer_password`
 
 ## Enter and access database collections
 
-DB_USERNAME and DB_PASSWORD are the password and user that you set ine the .env file in step 1
-
 ### MYSQL
 ```bash
 mysql -u <DB_USERNAME> -p
 ```
 When the bash asks for the password, enter <DB_PASSWORD>
+
+DB_USERNAME and DB_PASSWORD are the password and user that you set ine the .env file in step 1
+
+Alternatively you can use the preset users mentioned in step 4, if you want limited/all privileges.
 
 From here you are able to execute SQL commands like "show databases;"
 
@@ -70,7 +72,7 @@ From here you are able to execute SQL commands like "show databases;"
 ```bash
 mongosh
 ```
-From here you are able to execute mongoDB commands like "show dbs"
+Since there are no users, from here you are able to execute mongoDB commands like "show dbs"
 
 ## User privileges and creation SQL statements
 ``` sql
