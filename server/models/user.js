@@ -1,7 +1,7 @@
 'use strict';
 import { Model } from "sequelize";
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.hasMany(models.UserPrompt, { foreignKey: 'user_id', as: 'prompts' });

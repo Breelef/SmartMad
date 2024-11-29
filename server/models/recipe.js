@@ -1,7 +1,7 @@
 'use strict';
 import { Model } from "sequelize";
 
-module.exports = (sequelize, DataTypes) => {
+export default  (sequelize, DataTypes) => {
   class Recipe extends Model {
     static associate(models) {
       Recipe.belongsTo(models.AIResponse, { foreignKey: 'ai_response_id', as: 'aiResponse' });

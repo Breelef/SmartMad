@@ -6,14 +6,12 @@ import { Sequelize } from "sequelize";
 import * as process from "process";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file
 dotenv.config();
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const db = {};
 
-// Read database configuration from environment variables
 const config = {
   username: process.env[`DB_USERNAME_${env.toUpperCase()}`] || process.env.DB_USERNAME,
   password: process.env[`DB_PASSWORD_${env.toUpperCase()}`] || process.env.DB_PASSWORD,
@@ -50,7 +48,6 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;

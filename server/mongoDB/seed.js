@@ -183,7 +183,7 @@ const seedDatabase = async () => {
   } catch (error) {
     console.error("Error seeding the database:", error);
   } finally {
-    mongoose.connection.close(); // Close the connection once seeding is complete
+    mongoose.connection.close();
   }
 };
 
