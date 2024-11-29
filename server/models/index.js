@@ -1,9 +1,6 @@
-'use strict';
-
 import fs from "fs";
 import path from "path";
-import { Sequelize } from "sequelize";
-import * as process from "process";
+import { Sequelize, DataTypes } from "sequelize";
 import dotenv from "dotenv";
 
 // Load environment variables from .env file
@@ -23,27 +20,23 @@ const config = {
 };
 
 let sequelize;
+
 if (process.env[config.use_env_variable]) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
+// Dynamically load all models in this directory
+const modelsDir = path.join(__dirname);
+fs.readdirSync(modelsDir)
+  .filter(file => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js' && !file.includes('.test.js'))
   .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    const model = require(path.join(modelsDir, file))(sequelize, DataTypes);
     db[model.name] = model;
   });
 
+// Set associations if necessary
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
@@ -53,4 +46,4 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = db;
+export default db;
