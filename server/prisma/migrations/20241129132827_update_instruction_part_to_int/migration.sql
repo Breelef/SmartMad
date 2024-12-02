@@ -5,4 +5,5 @@
 
 */
 -- AlterTable
-ALTER TABLE `instruction` MODIFY `part` INTEGER NOT NULL;
+ALTER TABLE `instructions` MODIFY `part` INTEGER NOT NULL;
+

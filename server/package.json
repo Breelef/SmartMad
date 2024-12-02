@@ -5,15 +5,14 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "jest",
-    "alldb": "node database/deletedb.js && npm run migrate",
-    "migrate:refresh": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
-    "migrate": "node database/createdb.js && npx sequelize-cli db:migrate && node database/grantPrivileges.js",
-    "seed:refresh": "npx sequelize-cli db:seed:undo:all && node database/clearFunctionsAndViews.js && npm run seed",
-    "seedmongoandneo": "node mongoDB/seed.js && node neo4j/seed.js",
-    "seed": "npx sequelize-cli db:seed:all --debug && node database/storedFunctions.js && npm run seedmongoandneo",
-    "initdb": "npm run alldb && npm run seed"
-  },
+  "test": "jest",
+  "alldb": "node database/deletedb.js && npm run migrate",
+  "migrate:dev": "npx prisma migrate dev",
+  "migrate": "node database/createdb.js && npx prisma migrate deploy && node database/grantPrivileges.js",
+  "seedmongoandneo": "node mongoDB/seed.js && node neo4j/seed.js",
+  "seed": "node seeders/mysqlseeder.js && node database/storedFunctions.js && npm run seedmongoandneo",
+  "initdb": "npm run alldb && npm run seed"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

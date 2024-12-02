@@ -42,7 +42,7 @@ const triggersSQL = `
   BEFORE UPDATE ON recipes
   FOR EACH ROW
   BEGIN
-      SET NEW.updated_at = NOW();
+      SET NEW.updatedAt = NOW();
   END;
 `;
 
@@ -56,8 +56,8 @@ const eventsSQL = `
   ON SCHEDULE EVERY 1 DAY
   DO
     DELETE FROM recipes
-    WHERE deleted_at IS NOT NULL
-      AND deleted_at < NOW() - INTERVAL 1 YEAR;
+    WHERE deletedAt IS NOT NULL
+      AND deletedAt < NOW() - INTERVAL 1 YEAR;
 `;
 
 const populateDatabase = async () => {

@@ -107,7 +107,7 @@ GRANT ALL PRIVILEGES ON smartrecipe.* TO 'admin'@'localhost';
 CREATE USER IF NOT EXISTS 'customer'@'localhost' IDENTIFIED BY 'customer_password';
 ```
 ``` sql
-GRANT SELECT, INSERT, UPDATE ON smartrecipe.users TO 'customer'@'localhost';
-GRANT SELECT, INSERT, UPDATE ON smartrecipe.user_prompts TO 'customer'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON smartrecipe.User TO 'customer'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON smartrecipe.UserPrompt TO 'customer'@'localhost';
 ```
 

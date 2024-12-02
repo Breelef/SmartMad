@@ -24,7 +24,7 @@ const sqlCommands = `
     USE smartrecipe;
     
     GRANT SELECT, INSERT, UPDATE ON smartrecipe.users TO 'customer'@'localhost';
-    GRANT SELECT, INSERT, UPDATE ON smartrecipe.user_prompts TO 'customer'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.userPrompts TO 'customer'@'localhost';
 
 
     -- Apply privilege changes

@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:@localhost:3306/smartrecipe"
+  url      = "mysql://root:password@localhost:3306/smartrecipe"
 }
 
 model User {
@@ -40,7 +40,7 @@ model UserPrompt {
   aiResponseId Int?
   modifications RecipeModification[]
 
-  @@map("user_prompts")
+  @@map("userPrompts")
 }
 
 model AIResponse {
@@ -54,7 +54,7 @@ model AIResponse {
   recipes          Recipe[]
   modificationResponses ModificationResponse[]
 
-  @@map("ai_responses")
+  @@map("aiResponses")
 }
 
 model Recipe {
@@ -91,7 +91,7 @@ model RecipeIngredient {
   deletedAt     DateTime?
   recipe        Recipe    @relation(fields: [recipeId], references: [id])
   ingredient    Ingredient @relation(fields: [ingredientId], references: [id])
-  @@map("recipe_ingredients") // Custom table name for the pivot table
+  @@map("recipeIngredients") // Custom table name for the pivot table
   @@id([recipeId, ingredientId])
 }
 
@@ -132,7 +132,7 @@ model RecipeModification {
   userPrompt    UserPrompt         @relation(fields: [userPromptId], references: [id])
   modificationResponses ModificationResponse[]
 
-  @@map("recipe_modifications")
+  @@map("recipeModifications")
 }
 
 model ModificationResponse {
@@ -146,7 +146,7 @@ model ModificationResponse {
   aiResponse        AIResponse        @relation(fields: [aiResponseId], references: [id])
   modification      RecipeModification @relation(fields: [modificationId], references: [id])
 
-  @@map("modification_responses")
+  @@map("modificationResponses")
 }
 
 model UserRecipe {
@@ -157,7 +157,7 @@ model UserRecipe {
   user      User    @relation("UserRecipeUser", fields: [userId], references: [id])
   recipe    Recipe  @relation("UserRecipeRecipe", fields: [recipeId], references: [id])
 
-  @@map("user_recipes")
+  @@map("userRecipes")
 
   @@id([userId, recipeId])
 

@@ -84,7 +84,7 @@ async function seed() {
         prep: faker.number.int({ min: 5, max: 30 }),
         cook: faker.number.int({ min: 5, max: 30 }),
         portionSize: faker.number.int({ min: 2, max: 8 }),
-        finalComment: faker.lorem.paragraph(),
+        finalComment: faker.lorem.paragraph(2),
         createdAt: new Date(),
         updatedAt: new Date(),
       })),
