@@ -21,8 +21,8 @@ To begin, create a `.env` file at the root of your project (if it doesn't alread
 Add the following environment variables to your `.env` file:
 
 ```env
-DB_USERNAME=your_database_username
-DB_PASSWORD=your_database_password
+DB_USERNAME=your_root_database_username
+DB_PASSWORD=your_root_database_password
 DB_DATABASE=smartrecipe
 DB_HOST=your_database_host
 DB_DIALECT=mysql

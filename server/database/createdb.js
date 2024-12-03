@@ -1,18 +1,21 @@
 import mysql from "mysql2";
-import configFile from '../config/config.json' assert { type: 'json' };
+import dotenv from "dotenv"
+//Hvis bare filen skal køres
+//dotenv.config({ path: "../.env"});
 
-// Get the environment variable
-const env = process.env.NODE_ENV || 'development';
+//Hvis du kører fra root directory
+dotenv.config();
 
 // Access the configuration for the current environment
-const config = configFile[env];
+
 const connection = mysql.createConnection({
-    host: config.host,
-    user: config.username,
-    password: config.password,
-    port: config.port,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
     multipleStatements: true
 });
+
 
 const sqlCommands = `
     -- Create the database if it doesn't exist

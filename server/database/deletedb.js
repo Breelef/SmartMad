@@ -2,23 +2,21 @@ import mysql from "mysql2";
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file
+//Hvis bare filen skal køres
+//dotenv.config({ path: "../.env"});
+
+//Hvis du kører fra root directory
 dotenv.config();
 
-// Get the environment variable
-const env = process.env.NODE_ENV || 'development';
-
-// Use environment variables directly instead of config.json
-const config = {
-    host: process.env.DB_HOST || '127.0.0.1',
-    user: process.env.DB_USERNAME || 'root',
-    password: process.env.DB_PASSWORD || null,
-    database: process.env.DB_DATABASE || 'smartrecipe',
-    port: process.env.DB_PORT || 3306,
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+    database: process.env.DB_DATABASE,
     multipleStatements: true
-};
+});
 
-// Create the MySQL connection using the config object
-const connection = mysql.createConnection(config);
 
 // Function to execute SQL commands
 const executeQuery = (query) => {
