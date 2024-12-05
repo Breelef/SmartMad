@@ -76,13 +76,22 @@ async function seed() {
     });
     const aiResponses = await prisma.aIResponse.findMany();
 
+    const prep = {
+      value: faker.number.int({ min: 5, max: 30 }),
+      unit: "minutes",
+    };
+
+    const cook = {
+      value: faker.number.int({ min: 5, max: 30 }),
+      unit: "minutes",
+    };
     // Insert fake Recipes
     const recipeCreation = await prisma.recipe.createMany({
       data: aiResponses.map((aiResponse) => ({
         aiResponseId: aiResponse.id,
         name: faker.commerce.productName(),
-        prep: faker.number.int({ min: 5, max: 30 }),
-        cook: faker.number.int({ min: 5, max: 30 }),
+        prep: prep,
+        cook: cook,
         portionSize: faker.number.int({ min: 2, max: 8 }),
         finalComment: faker.lorem.paragraph(2),
         createdAt: new Date(),

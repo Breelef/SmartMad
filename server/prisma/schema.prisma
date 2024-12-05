@@ -61,8 +61,8 @@ model Recipe {
   id                Int                  @id @default(autoincrement())
   aiResponseId      Int
   name              String
-  prep              Int
-  cook              Int
+  prep              Json
+  cook              Json
   portionSize       Int
   finalComment      String
   createdAt         DateTime             @default(now())
@@ -97,7 +97,7 @@ model RecipeIngredient {
 
 model Ingredient {
   id                Int                @id @default(autoincrement())
-  name              String
+  name              String             @unique
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   deletedAt         DateTime?

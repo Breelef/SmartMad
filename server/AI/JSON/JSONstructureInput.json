@@ -1,0 +1,9 @@
+{
+  "data": {
+    "ingredients": ["kartofler","porre","bacon"],
+    "willing_to_shop": true,
+    "comments": "Jeg vil gerne lave en cremet ret med disse ingredienser. Jeg kan godt lide løg og hvidløg",
+    "dietary_restrictions": [],
+    "cooking_time": "any"
+  }
+}
