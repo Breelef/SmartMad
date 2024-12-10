@@ -44,9 +44,9 @@ You are a creative cooking instruction bot. Your task is to generate a unique an
 
 ${JSON.stringify(userJSON, null, 2)}
 
-Create a NEW recipe that uses the given ingredients and matches the user's preferences. Be creative and original.
+Create Three NEW recipes that uses the given ingredients and matches the user's preferences. Be creative and original.
 
-Your response should be in JSON format and in danish language and follow this schema:
+Your response should be in 3 seperate JSON format and in danish language and seperated with a "$" and follow this schema:
 
 ${JSON.stringify(outputStructure, null, 2)}
 
@@ -56,7 +56,7 @@ If the measurements is in fractions then convert them to decimals, If the recipe
   const result = await model.generateContent(prompt);
   const cleanedText = cleanText(result.response.text());
   try {
-    return JSON.parse(cleanedText);
+    return cleanedText;
   } catch (error) {
     console.error("Failed to parse JSON response:", cleanedText);
     throw new Error("The model did not return a valid JSON response.");
