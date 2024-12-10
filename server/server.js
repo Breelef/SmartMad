@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from "cors";
 import passport from "passport";
 import session from "express-session";
-import configurePassport from './auth/passportGoogle.js';
+//import configurePassport from './auth/passportGoogle.js';
 import authRoutes from "./routes/authRoutes.js";
 import recipeCreation from "./routes/recipeCreationRoute.js";
 

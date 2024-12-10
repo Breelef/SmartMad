@@ -16,7 +16,7 @@ async function initializeAI() {
 
 // Read JSON files
 function readJSONFile(filename) {
-  const filePath = path.join(__dirname, "/JSON/" + filename);
+  const filePath = path.join(__dirname + filename);
   try {
     const data = fs.readFileSync(filePath, "utf8");
     return JSON.parse(data);
@@ -33,7 +33,7 @@ function cleanText(rawText) {
 
 export async function generateRecipe(userJSON) {
   const model = await initializeAI();
-  const outputStructure = readJSONFile("../JSONstructureOutputSkeleton.json");
+  const outputStructure = readJSONFile("/JSON/JSONstructureOutputSkeleton.json");
 
   if (!outputStructure) {
     throw new Error("Failed to read input or output JSON files");

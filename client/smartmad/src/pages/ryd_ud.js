@@ -49,7 +49,7 @@ export const ClearOut = () => {
 
     console.log('Data to submit:', JSON.stringify(data));
 
-    fetch('http://localhost:8080/testAPI', {
+    fetch('http://localhost:8080/firstUserPrompt', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

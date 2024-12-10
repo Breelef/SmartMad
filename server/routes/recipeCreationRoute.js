@@ -10,11 +10,11 @@ const router = Router();
 
 router.post("/firstUserPrompt", async (req, res) => {
     try{
-        const { userId, prompt } = req.body;  // Get userId and prompt from the request body
-        const savedPromptId = await createPrompt(userId, prompt);
-        const response = await generateRecipe(prompt);
-        const savedAiResponse = createAiResponseFromPrompt(savedPromptId, response);
-        res.json({ savedAiResponse });
+        const { userId, data } = req.body;  // Get userId and prompt from the request body
+        const savedPromptId = await createPrompt(1, data);
+        const response = await generateRecipe(data);
+        const savedAiResponse = await createAiResponseFromPrompt(savedPromptId, response);
+        res.json({ data: savedAiResponse });
     }catch (e) {
         console.error("Error creating response:", e);
         res.status(500).json({ error: "Failed to create response"});
