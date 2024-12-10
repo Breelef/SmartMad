@@ -9,18 +9,23 @@ const router = Router();
 
 
 router.post("/firstUserPrompt", async (req, res) => {
-  const { userId, prompt } = req.body;  // Get userId and prompt from the request body
-    const savedPromptId = await createPrompt(userId, prompt);
-    const response = await generateRecipe(prompt);
-    const savedAiResponse = createAiResponseFromPrompt(savedPromptId, response);
-    res.json({ savedAiResponse });
+    try{
+        const { userId, prompt } = req.body;  // Get userId and prompt from the request body
+        const savedPromptId = await createPrompt(userId, prompt);
+        const response = await generateRecipe(prompt);
+        const savedAiResponse = createAiResponseFromPrompt(savedPromptId, response);
+        res.json({ savedAiResponse });
+    }catch (e) {
+        console.error("Error creating response:", e);
+        res.status(500).json({ error: "Failed to create response"});
+    }
 });
 
 router.post("/recipeChosen", async (req, res) => {
     try{
         const { responseId, recipeChosenId } = req.body;
-        const recipe = await createRecipe(responseId);
-        res.json(recipe)
+        const recipe = await createRecipe(responseId, recipeChosenId);
+        res.json(recipe);
     }catch (e){
         console.error("Error creating recipe:", e);
         res.status(500).json({ error: "Failed to create recipe"});
