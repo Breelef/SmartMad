@@ -31,10 +31,10 @@ jobs:
 #          region: ${{ secrets.OCI_REGION }}
 
       # Build the application (if necessary)
-      - name: Build Application
-        run: |
-          npm install
-          npm run build
+#      - name: Build Application
+#        run: |
+#          npm install
+#          npm run build
 
       # Deploy to Oracle Cloud
 #      - name: Deploy Application
