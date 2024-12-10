@@ -200,5 +200,5 @@ const config = {
 export default {
   testEnvironment: 'node',
   clearMocks: true,
-  transform: {},
+  transform: {'^.+\\.js$': 'babel-jest',},
 };
