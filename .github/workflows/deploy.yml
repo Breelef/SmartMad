@@ -1,0 +1,36 @@
+name: CI/CD with Oracle Cloud
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      
+#      - name: Set up Oracle CLI
+#        uses: oracle/oci-cli-action@v1.1
+#        with:
+#          tenancy_ocid: ${{ secrets.OCI_TENANCY_OCID }}
+#          user_ocid: ${{ secrets.OCI_USER_OCID }}
+#          fingerprint: ${{ secrets.OCI_FINGERPRINT }}
+#          private_key: ${{ secrets.OCI_PRIVATE_KEY }}
+#          region: ${{ secrets.OCI_REGION }}
+
+      # Build the application (if necessary)
+      - name: Build Application
+        run: |
+          npm install
+          npm run build
+
+      # Deploy to Oracle Cloud
+#      - name: Deploy Application
+#        run: |
+#          oci --region ${{ secrets.OCI_REGION }} compute instance action \
+#            --instance-id <INSTANCE_ID> \
+#            --action SOFTRESET
