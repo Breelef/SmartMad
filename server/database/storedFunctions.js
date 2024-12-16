@@ -26,7 +26,6 @@ const functionsAndProceduresSQL = `
       RETURN prep + cook;
   END;
 
-  -- Stored procedure to get a recipe by ID
   CREATE PROCEDURE get_recipe_by_id(IN recipe_id INT)
   BEGIN
       SELECT * FROM recipes WHERE id = recipe_id;
