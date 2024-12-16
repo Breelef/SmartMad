@@ -1,87 +1,68 @@
-import neo4j from 'neo4j-driver';
 import dotenv from 'dotenv';
+import graphService from './graphService';
 import { faker } from '@faker-js/faker';
 
 dotenv.config();
 
-const driver = neo4j.driver(
-  process.env.NEO4J_URI,
-  neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
-);
-console.log("Connected to Neo4j...");
-
-const session = driver.session();
-
 const seedGraphDatabase = async () => {
   try {
-
-    await session.run('MATCH (n) DETACH DELETE n');
-    
+    console.log('Clearing existing data...');
+    await graphService.executeQuery('MATCH (n) DETACH DELETE n');
 
     // Seed Users
+    console.log('Seeding Users...');
     const users = [];
     for (let i = 0; i < 5; i++) {
-      const user = {
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-      };
-      await session.run(
-        `CREATE (:User {name: $name, email: $email, password: $password})`,
-        user
+      const user = await graphService.executeQuery(
+        `CREATE (u:User {name: $name, email: $email, password: $password}) RETURN u`,
+        {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+        }
       );
       users.push(user);
     }
-    console.log('Users seeded');
 
     // Seed UserPrompts
+    console.log('Seeding UserPrompts...');
     const userPrompts = [];
-    for (let i = 0; i < 5; i++) {
-      const userPrompt = {
-        email: users[i % users.length].email,
-        prompt: faker.lorem.sentence(),
-      };
-      await session.run(
+    for (const user of users) {
+      const userPrompt = await graphService.executeQuery(
         `
         MATCH (u:User {email: $email})
-        CREATE (p:UserPrompt {prompt: $prompt, createdAt: datetime()})-[:CREATED_BY]->(u)
+        CREATE (p:UserPrompt {prompt: $prompt, createdAt: datetime()})-[:CREATED_BY]->(u) RETURN p
         `,
-        userPrompt
+        {
+          email: user.email,
+          prompt: faker.lorem.sentence(),
+        }
       );
       userPrompts.push(userPrompt);
     }
-    console.log('UserPrompts seeded');
 
     // Seed AIResponses
+    console.log('Seeding AIResponses...');
     const aiResponses = [];
-    for (let i = 0; i < userPrompts.length; i++) {
-      const aiResponse = {
-        prompt: userPrompts[i % userPrompts.length].prompt,  // Associate with a random UserPrompt
-        response: '{"recipe": "Pasta Bolognese"}',
-      };
-      await session.run(
+    for (const prompt of userPrompts) {
+      const aiResponse = await graphService.executeQuery(
         `
         MATCH (p:UserPrompt {prompt: $prompt})
-        CREATE (ar:AIResponse {response: $response, createdAt: datetime()})-[:GENERATED_FROM]->(p)
+        CREATE (ar:AIResponse {response: $response, createdAt: datetime()})-[:GENERATED_FROM]->(p) RETURN ar
         `,
-        aiResponse
+        {
+          prompt: prompt.prompt,
+          response: JSON.stringify({ recipe: 'Pasta Bolognese' }),
+        }
       );
       aiResponses.push(aiResponse);
     }
-    console.log('AIResponses seeded');
 
     // Seed Recipes
+    console.log('Seeding Recipes...');
     const recipes = [];
-    for (let i = 0; i < aiResponses.length; i++) {
-      const recipe = {
-        name: faker.commerce.productName(),
-        prep: faker.number.int({ min: 5, max: 60 }),
-        cook: faker.number.int({ min: 5, max: 120 }),
-        portion_size: faker.number.int({ min: 1, max: 6 }),
-        final_comment: faker.lorem.sentence(),
-        response: aiResponses[i % aiResponses.length].response,
-      };
-      await session.run(
+    for (const response of aiResponses) {
+      const recipe = await graphService.executeQuery(
         `
         MATCH (ar:AIResponse {response: $response})
         CREATE (r:Recipe {
@@ -91,33 +72,38 @@ const seedGraphDatabase = async () => {
           portion_size: $portion_size,
           final_comment: $final_comment,
           createdAt: datetime()
-        })-[:BASED_ON_RESPONSE]->(ar)
+        })-[:BASED_ON_RESPONSE]->(ar) RETURN r
         `,
-        recipe
+        {
+          name: faker.commerce.productName(),
+          prep: faker.number.int({ min: 5, max: 60 }),
+          cook: faker.number.int({ min: 5, max: 120 }),
+          portion_size: faker.number.int({ min: 1, max: 6 }),
+          final_comment: faker.lorem.sentence(),
+          response: response.response,
+        }
       );
       recipes.push(recipe);
     }
-    console.log('Recipes seeded');
 
     // Seed Ingredients
+    console.log('Seeding Ingredients...');
     const ingredients = [];
     for (let i = 0; i < 10; i++) {
-      const ingredient = { name: faker.commerce.productName() };
-      await session.run(
-        `CREATE (:Ingredient {name: $name})`,
-        ingredient
-      );
+      const ingredient = await graphService.createIngredient({
+        name: faker.commerce.productName(),
+      });
       ingredients.push(ingredient);
     }
-    console.log('Ingredients seeded');
 
-    // Seed RecipeIngredients (pivot table)
+    // Seed RecipeIngredients
+    console.log('Seeding RecipeIngredients...');
     for (let i = 0; i < 10; i++) {
       const recipeIngredient = {
         recipe_name: recipes[faker.number.int({ min: 0, max: recipes.length - 1 })].name,
         ingredient_name: ingredients[faker.number.int({ min: 0, max: ingredients.length - 1 })].name,
       };
-      await session.run(
+      await graphService.executeQuery(
         `
         MATCH (r:Recipe {name: $recipe_name}), (i:Ingredient {name: $ingredient_name})
         CREATE (r)-[:HAS_INGREDIENT]->(i)
@@ -125,53 +111,42 @@ const seedGraphDatabase = async () => {
         recipeIngredient
       );
     }
-    console.log('RecipeIngredient seeded');
 
     // Seed Instructions
-    for (let i = 0; i < 5; i++) {
-      const instruction = {
-        recipe_name: recipes[i % recipes.length].name,
-        part: faker.lorem.words(),
-        steps: Array.from({ length: 3 }).map(() => faker.lorem.sentence()),
-      };
-      await session.run(
+    console.log('Seeding Instructions...');
+    for (const recipe of recipes) {
+      await graphService.executeQuery(
         `
         MATCH (r:Recipe {name: $recipe_name})
         CREATE (instr:Instruction {part: $part, steps: $steps, createdAt: datetime()})
         CREATE (r)-[:HAS_INSTRUCTION]->(instr)
         `,
-        instruction
+        {
+          recipe_name: recipe.name,
+          part: faker.lorem.words(),
+          steps: Array.from({ length: 3 }).map(() => faker.lorem.sentence()),
+        }
       );
     }
-    console.log('Instruction seeded');
 
     // Seed Modifications
-    for (let i = 0; i < 5; i++) {
-      const modification = {
-        response: aiResponses[i % aiResponses.length].response,
-      };
-      await session.run(
+    console.log('Seeding Modifications...');
+    for (const response of aiResponses) {
+      await graphService.executeQuery(
         `
         MATCH (ar:AIResponse {response: $response})
         CREATE (mod:ModificationResponse {applied_to_recipe: true, createdAt: datetime()})
         CREATE (mod)-[:MODIFIED_RESPONSE]->(ar)
         `,
-        modification
+        {
+          response: response.response,
+        }
       );
     }
-    console.log('ModificationResponse seeded');
 
-    console.log('All Neo4j data seeded\n\n');
+    console.log('All data seeded successfully.');
   } catch (error) {
     console.error('Error seeding graph database:', error);
-  } finally {
-    // Ensure we close the session and the driver connection
-    if (session) {
-      await session.close();
-    }
-    if (driver) {
-      await driver.close();
-    }
   }
 };
 
