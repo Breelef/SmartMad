@@ -29,7 +29,6 @@ app.post('/testAPI', async (req, res) => {
             }
         }).filter(obj => obj !== null);
 
-
         res.json({ recipes: jsonObjects });
     } catch (error) {
         console.error('Error generating recipe:', error);

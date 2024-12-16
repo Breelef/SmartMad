@@ -38,7 +38,7 @@ const seedGraphDatabase = async () => {
     const userPrompts = [];
     for (let i = 0; i < 5; i++) {
       const userPrompt = {
-        email: users[i % users.length].email,  // Associate with a random user
+        email: users[i % users.length].email,
         prompt: faker.lorem.sentence(),
       };
       await session.run(

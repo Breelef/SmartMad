@@ -48,7 +48,7 @@ const seedDatabase = async () => {
     const userPrompts = [];
     for (let i = 0; i < 5; i++) {
       const userPrompt = await UserPrompt.create({
-        user_id: users[i % users.length]._id, // Associate with random user
+        user_id: users[i % users.length]._id,
         prompt: {
           text: faker.lorem.sentence(),
         },

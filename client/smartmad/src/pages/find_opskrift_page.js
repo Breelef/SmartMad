@@ -9,9 +9,14 @@ export const FindOpskriftPage = () => {
 
   const routerLocation = useLocation();
   const { data } = routerLocation.state || {};
-  const recipes = useMemo(() => data?.recipes || [], [data?.recipes]);
+  console.log("recipe", data.recipes[0].recipes[0].data.name);
+  const recipes = useMemo(() => data?.recipes?.[0]?.recipes || [], [data?.recipes]);
+  console.log(recipes);
+  console.log(recipes[0].data.name);
+
   const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
-  const recipeData = recipes[currentRecipeIndex]?.data;
+  const recipeData = recipes[currentRecipeIndex].data;
+  console.log(recipeData);  
 
   return (
     <div className="bg-gradient-to-b from-blue-800 to-blue-900 min-h-screen flex p-6 text-white">
