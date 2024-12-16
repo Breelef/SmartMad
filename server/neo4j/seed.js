@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import graphService from './graphService';
+import graphService from './graphService.js';
 import { faker } from '@faker-js/faker';
 
 dotenv.config();
