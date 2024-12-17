@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import {RecipeButton} from "../components/find_opskrifter_knap.js";
+import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { RecipeButton } from "../components/find_opskrifter_knap.js";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -24,9 +27,15 @@ export const LoginPage = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.post("http://localhost:8080/login", {
-          email: values.email,
-          password: values.password,
+        const response = await fetch("http://localhost:8080/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password,
+          }),
         });
 
         // Handle successful login
@@ -48,8 +57,14 @@ export const LoginPage = () => {
   const handleGoogleLogin = async (response) => {
     try {
       // Send the Google token to the backend for authentication
-      const googleResponse = await axios.post("http://localhost:8080/auth/google", {
-        token: response.credential,
+      const googleResponse = await fetch("http://localhost:8080/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: response.credential,
+        }),
       });
 
       if (googleResponse.data.success) {
@@ -109,12 +124,7 @@ export const LoginPage = () => {
           </div>
 
           {/* Submit button for traditional login */}
-          <button
-            type="submit"
-            className="w-full py-2 bg-teal-500 text-white rounded-md"
-          >
-            Login
-          </button>
+          <RecipeButton type="submit">Login</RecipeButton>
         </form>
 
         {/* Google login button */}
