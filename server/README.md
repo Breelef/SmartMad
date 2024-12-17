@@ -5,6 +5,7 @@
 Before you start, ensure that you have the following installed:
 - Node.js
 - MySQL or MariaDB server running
+- Docker desktop is installed and running
 - And make sure you are in the server folder. With the following command:
 ```bash
 cd .\server\
