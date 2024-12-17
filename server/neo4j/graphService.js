@@ -52,7 +52,6 @@ const graphService = {
     const [result] = await executeQuery(query, { id: parseInt(id, 10) });
     return result?.ingredients || [];
   },
-
 };
 
 export default graphService;
