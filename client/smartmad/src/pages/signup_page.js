@@ -1,135 +1,154 @@
 import React from "react";
+import { RecipeButton } from "../components/find_opskrifter_knap.js";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import axios for API requests
-import { GoogleLogin } from "@react-oauth/google"; // Google login component
+import { GoogleLogin } from "@react-oauth/google";  // Import the GoogleLogin component
 
-const LoginPage = () => {
-  const navigate = useNavigate();
+export const SignupPage = () => {
+    const navigate = useNavigate();
 
-  // Validation schema using Yup
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
-  });
+    // Form validation schema
+    const validationSchema = Yup.object({
+        name: Yup.string().required("Navn er påkrævet."),
+        email: Yup.string()
+            .email("Email er ugyldig.")
+            .required("Email er påkrævet."),
+        password: Yup.string()
+            .min(6, "Kodeord skal være mindst 6 tegn.")
+            .required("Kodeord er påkrævet."),
+    });
 
-  // Formik form setup
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      try {
-        const response = await axios.post("http://localhost:8080/login", {
-          email: values.email,
-          password: values.password,
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+            email: "",
+            password: "",
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            try {
+                const response = await fetch("localhost:8080/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(values),
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Signup failed:", errorData);
+                    alert(`Signup failed: ${errorData.message || "Unknown error"}`);
+                    return;
+                }
+                console.log("User signed up successfully");
+                navigate("/login");
+            } catch (e) {
+                console.error("Error during signup:", e);
+                alert("An error occurred during signup. Please try again.");
+            }
+        },
+    });
+
+    // Handle Google OAuth success
+    const handleGoogleLogin = async (response) => {
+        const { credential } = response;
+        const userData = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: {
+                Authorization: `Bearer ${credential}`,
+            },
+        }).then((res) => res.json());
+
+        // Assuming you handle creating/signing up the user with the received user data
+        const googleUser = {
+            name: userData.name,
+            email: userData.email,
+            oauthId: userData.sub,
+            oauthProvider: "google",
+        };
+
+        // Send the Google OAuth user data to your backend
+        const signupResponse = await fetch("localhost:8080/signup/google", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(googleUser),
         });
 
-        // Handle successful login
-        if (response.data.success) {
-          console.log("User logged in successfully");
-          navigate("/dashboard"); // Redirect to dashboard (or other page)
-        } else {
-          console.error("Login failed", response.data.message);
-          alert("Login failed: " + response.data.message);
+        if (!signupResponse.ok) {
+            const errorData = await signupResponse.json();
+            console.error("Google signup failed:", errorData);
+            alert(`Signup failed: ${errorData.message || "Unknown error"}`);
+            return;
         }
-      } catch (error) {
-        console.error("Error during login", error);
-        alert("An error occurred during login. Please try again.");
-      }
-    },
-  });
+        navigate("/login");
+    };
 
-  // Google login success handler
-  const handleGoogleLogin = async (response) => {
-    try {
-      // Send the Google token to the backend for authentication
-      const googleResponse = await axios.post("http://localhost:8080/auth/google", {
-        token: response.credential,
-      });
+    return (
+        <div className="flex justify-center items-center min-h-screen bg-blue-900">
+            <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
+                <h1 className="text-center text-3xl font-bold mb-6 text-teal-500">SmartOpskrift</h1>
+                <h2 className="text-center text-xl font-semibold mb-4">Signup</h2>
+                <form onSubmit={formik.handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-blue-900 font-semibold mb-1">Navn</label>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Indtast dit navn"
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className={`w-full px-3 py-2 border rounded-md bg-gray-200 text-blue-900 ${
+                                formik.touched.name && formik.errors.name ? "border-red-500" : ""
+                            }`}
+                        />
+                        {formik.touched.name && formik.errors.name && (
+                            <p className="text-red-500 text-sm">{formik.errors.name}</p>
+                        )}
+                    </div>
+                    <div>
+                        <label className="block text-blue-900 font-semibold mb-1">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Indtast din email"
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className={`w-full px-3 py-2 border rounded-md bg-gray-200 text-blue-900 ${
+                                formik.touched.email && formik.errors.email ? "border-red-500" : ""
+                            }`}
+                        />
+                        {formik.touched.email && formik.errors.email && (
+                            <p className="text-red-500 text-sm">{formik.errors.email}</p>
+                        )}
+                    </div>
+                    <div>
+                        <label className="block text-blue-900 font-semibold mb-1">Kodeord</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Indtast din kodeord"
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className={`w-full px-3 py-2 border rounded-md bg-gray-200 text-blue-900 ${
+                                formik.touched.password && formik.errors.password ? "border-red-500" : ""
+                            }`}
+                        />
+                        {formik.touched.password && formik.errors.password && (
+                            <p className="text-red-500 text-sm">{formik.errors.password}</p>
+                        )}
+                    </div>
+                    <RecipeButton type="submit">Signup</RecipeButton>
+                </form>
 
-      if (googleResponse.data.success) {
-        console.log("Google login successful");
-        navigate("/dashboard");
-      } else {
-        alert("Google login failed: " + googleResponse.data.message);
-      }
-    } catch (error) {
-      console.error("Error during Google login", error);
-      alert("An error occurred during Google login.");
-    }
-  };
-
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-blue-900">
-      <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
-        <h1 className="text-center text-3xl font-bold mb-6 text-teal-500">SmartOpskrift</h1>
-        <h2 className="text-center text-xl font-semibold mb-4">Login</h2>
-        <form onSubmit={formik.handleSubmit} className="space-y-4">
-          {/* Email field */}
-          <div>
-            <label className="block text-blue-900 font-semibold mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className={`w-full px-3 py-2 border rounded-md bg-gray-200 text-blue-900 ${
-                formik.touched.email && formik.errors.email ? "border-red-500" : ""
-              }`}
-            />
-            {formik.touched.email && formik.errors.email && (
-              <p className="text-red-500 text-sm">{formik.errors.email}</p>
-            )}
-          </div>
-
-          {/* Password field */}
-          <div>
-            <label className="block text-blue-900 font-semibold mb-1">Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className={`w-full px-3 py-2 border rounded-md bg-gray-200 text-blue-900 ${
-                formik.touched.password && formik.errors.password ? "border-red-500" : ""
-              }`}
-            />
-            {formik.touched.password && formik.errors.password && (
-              <p className="text-red-500 text-sm">{formik.errors.password}</p>
-            )}
-          </div>
-
-          {/* Submit button for traditional login */}
-          <button
-            type="submit"
-            className="w-full py-2 bg-teal-500 text-white rounded-md"
-          >
-            Login
-          </button>
-        </form>
-
-        {/* Google login button */}
-        <div className="mt-4">
-          <GoogleLogin
-            onSuccess={handleGoogleLogin}
-            onError={() => console.log("Google Login Failed")}
-          />
+                {/* Google login button */}
+                <div className="mt-4">
+                    <GoogleLogin
+                        onSuccess={handleGoogleLogin}
+                        onError={() => alert('Google login failed!')}
+                    />
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
-
-export default LoginPage;
