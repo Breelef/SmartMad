@@ -20,8 +20,22 @@ const connection = mysql.createConnection({
 const sqlCommands = `
     USE smartrecipe;
     
-    GRANT SELECT, INSERT, UPDATE ON smartrecipe.users TO 'customer'@'localhost';
-    GRANT SELECT, INSERT, UPDATE ON smartrecipe.userPrompts TO 'customer'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.users TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.userPrompts TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe._RecipeIngredients TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe._UserRecipes TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.aiResponses TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.ingredients TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.instructions TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.modificationResponses TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipeIngredients TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipeModifications TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipes TO 'app_user'@'localhost';
+    GRANT SELECT, INSERT, UPDATE ON smartrecipe.userRecipes TO 'app_user'@'localhost';
+    
+    GRANT SELECT ON smartrecipe.users TO 'restricted_user'@'localhost';
+    GRANT SELECT ON smartrecipe.userPrompts TO 'restricted_user'@'localhost';
+    
 
 
     -- Apply privilege changes
