@@ -11,6 +11,36 @@ Before you start, ensure that you have the following installed:
 
 ## Frontend
 
+## 1. Set up your `.env` file
+
+To begin, create a `.env` file in the server folder. This file will store your database credentials and other environment-specific variables.
+
+Add the following environment variables to your `.env` file:
+
+```env
+DB_USERNAME=root
+DB_PASSWORD=password
+DB_DATABASE=smartrecipe
+DB_HOST=localhost
+DB_DIALECT=mysql
+DB_PORT=3306
+DATABASE_URL=mysql://root:@localhost:3306/smartrecipe
+
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=password
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=
+
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+GITHUB_CALLBACK_URL=
+SESSION_SECRET=
+GEMINI_API_KEY=
+```
+
 Navigate into the `client/smartmad` directory:
 
 ```bash
