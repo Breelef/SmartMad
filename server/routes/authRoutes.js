@@ -1,9 +1,10 @@
 import { Router } from "express";
 import passport from "passport";
+import {login, verify, refreshToken, logout, signup, deleteUser} from "../service/authService.js";
 
 const router = Router();
 
-// Initiate GitHub OAuth login
+// Initiate google OAuth login
 router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
@@ -14,11 +15,12 @@ router.get(
     }
 );
 
-router.get("/logout", (req, res) => {
-    req.logout((err) => {
-        if (err) return res.status(500).send("Error logging out");
-        res.redirect("http://localhost:3000");
-    });
-});
+router.post('/login', login);
+router.post('/signup', signup);
+router.post('/logout', logout);
+router.get("/verify", verify);
+router.post("/refresh", refreshToken);
+router.delete("/delete", deleteUser);
+
 
 export default router;
