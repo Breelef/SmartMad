@@ -2,6 +2,13 @@
 
 # Project Setup Instructions
 
+## Prerequisites
+
+Before you start, ensure that you have the following installed:
+- Node.js
+- MySQL or MariaDB server running
+- Docker desktop installed and running
+
 ## Frontend
 
 Navigate into the `client/smartmad` directory:
