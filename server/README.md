@@ -59,6 +59,18 @@ Password: `admin_password`
 Username: `customer`  
 Password: `customer_password`
 
+**app user **
+Username: `app_user`
+Password: `app_user_password`
+
+**restricted user**
+Username: `restricted_user`
+password: `restricted_password`
+
+**Read only user**
+Username: `read_only_user`
+Password: `read_only_password`
+
 ## Enter and access database collections
 
 ### MYSQL
