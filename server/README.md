@@ -86,6 +86,9 @@ show dbs
 
 ```bash
 cypher-shell -u <NEO4J_USERNAME> -p <NEO4J_PASSWORD>
+
+in this case:
+cypher-shell -u neo4j -p password
 ```
 
 NEO4J_USERNAME and NEO4J_PASSWORD are the user and password that you set in the .env file in step 1
