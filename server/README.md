@@ -14,7 +14,7 @@ While being in the server folder, install the node modules with the command:
 npm i
 ```
 
-## 1. Set up your `.env` file
+### Step 1: Set up your `.env` file
 
 To begin, create a `.env` file at the root of your project (if it doesn't already exist). This file will store your database credentials and other environment-specific variables.
 
