@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from "cors";
 import passport from "passport";
 import session from "express-session";
-import configurePassport from './auth/passportGoogle.js';
+import {configurePassport} from "./auth/passportGoogle.js";
 import authRoutes from "./routes/authRoutes.js";
 import recipeCreation from "./routes/recipeCreationRoute.js";
 import neo4jRouter from "./neo4j/neo4jApp.js";
@@ -16,12 +16,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(
-session({
-   secret: process.env.SESSION_SECRET,
-   resave: false,
-   saveUninitialized: true,
-})
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 configurePassport();

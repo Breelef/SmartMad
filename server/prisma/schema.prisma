@@ -14,16 +14,18 @@ datasource db {
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  name        String
-  email       String       @unique
-  password    String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  deletedAt   DateTime?
-  prompts     UserPrompt[]
-  recipes     Recipe[]     @relation("UserRecipes")
-  userRecipes UserRecipe[] @relation("UserRecipeUser")
+  id            Int          @id @default(autoincrement())
+  name          String
+  email         String       @unique
+  password      String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deletedAt     DateTime?
+  oauthId       String?
+  oauthProvider String?
+  prompts       UserPrompt[]
+  recipes       Recipe[]     @relation("UserRecipes")
+  userRecipes   UserRecipe[] @relation("UserRecipeUser")
 
   @@map("users")
 }

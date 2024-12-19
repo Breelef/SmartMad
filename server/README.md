@@ -5,6 +5,7 @@
 Before you start, ensure that you have the following installed:
 - Node.js
 - MySQL or MariaDB server running
+- Make sure docker is installed and running on your computer
 - And make sure you are in the server folder. With the following command:
 ```bash
 cd .\server\
@@ -14,7 +15,7 @@ While being in the server folder, install the node modules with the command:
 npm i
 ```
 
-## 1. Set up your `.env` file
+### Step 1: Set up your `.env` file
 
 To begin, create a `.env` file at the root of your project (if it doesn't already exist). This file will store your database credentials and other environment-specific variables.
 
@@ -58,6 +59,18 @@ Password: `admin_password`
 Username: `customer`  
 Password: `customer_password`
 
+**APP USER**  
+Username: `app_user`
+Password: `app_user_password`
+
+**RESTRICTED USER**  
+Username: `restricted_user`
+password: `restricted_password`
+
+**READ ONLY USER**  
+Username: `read_only_user`
+Password: `read_only_password`
+
 ## Enter and access database collections
 
 ### MYSQL
@@ -85,12 +98,12 @@ show dbs
 ### NEO4J
 
 ```bash
-cypher-shell -u <NEO4J_USERNAME> -p <NEO4J_PASSWORD>
+cypher-shell -u neo4j -p password
 ```
 
 NEO4J_USERNAME and NEO4J_PASSWORD are the user and password that you set in the .env file in step 1
 
-Since there are no users, from here you are able to execute mongoDB commands like 
+Since there are no users, from here you are able to execute Neo4j commands like 
 
 ```bash
 MATCH (n) RETURN n LIMIT 25;

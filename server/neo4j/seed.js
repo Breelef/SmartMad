@@ -21,7 +21,7 @@ const seedGraphDatabase = async () => {
           password: faker.internet.password(),
         }
       );
-      users.push(user);
+      users.push(user[0]?.u?.properties);
     }
 
     // Seed UserPrompts
@@ -38,7 +38,7 @@ const seedGraphDatabase = async () => {
           prompt: faker.lorem.sentence(),
         }
       );
-      userPrompts.push(userPrompt);
+      userPrompts.push(userPrompt[0]?.p?.properties);
     }
 
     // Seed AIResponses
@@ -55,7 +55,7 @@ const seedGraphDatabase = async () => {
           response: JSON.stringify({ recipe: 'Pasta Bolognese' }),
         }
       );
-      aiResponses.push(aiResponse);
+      aiResponses.push(aiResponse[0]?.ar?.properties);
     }
 
     // Seed Recipes
@@ -83,7 +83,7 @@ const seedGraphDatabase = async () => {
           response: response.response,
         }
       );
-      recipes.push(recipe);
+      recipes.push(recipe[0]?.r?.properties);
     }
 
     // Seed Ingredients
@@ -144,7 +144,7 @@ const seedGraphDatabase = async () => {
       );
     }
 
-    console.log('All data seeded successfully.');
+    console.log('All Neo4j data seeded successfully.');
   } catch (error) {
     console.error('Error seeding graph database:', error);
   }

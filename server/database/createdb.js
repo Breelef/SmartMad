@@ -32,8 +32,26 @@ const sqlCommands = `
     -- Grant all privileges on the smartrecipe database to the admin user
     GRANT ALL PRIVILEGES ON smartrecipe.* TO 'admin'@'localhost';
     
-    -- Create the customer user (you can set limited privileges if needed)
-    CREATE USER IF NOT EXISTS 'customer'@'localhost' IDENTIFIED BY 'customer_password';
+    -- Drop the read-only user if it already exists
+    DROP USER IF EXISTS 'read_only_user'@'localhost';
+    
+    -- Create the read-only user with a password
+    CREATE USER IF NOT EXISTS 'read_only_user'@'localhost' IDENTIFIED BY 'read_only_password';
+    
+    -- Grant SELECT privileges only to the read-only user
+    GRANT SELECT ON smartrecipe.* TO 'read_only_user'@'localhost';
+    
+      -- Drop the restricted user if it already exists
+    DROP USER IF EXISTS 'restricted_user'@'localhost';
+    
+    -- Create the restricted user with a password
+    CREATE USER IF NOT EXISTS 'restricted_user'@'localhost' IDENTIFIED BY 'restricted_password';
+    
+     -- Drop the app user if it already exists
+    DROP USER IF EXISTS 'app_user'@'localhost';
+    
+    -- Create the app user (you can set limited privileges if needed)
+    CREATE USER IF NOT EXISTS 'app_user'@'localhost' IDENTIFIED BY 'app_user_password';
     
     -- Apply the changes by flushing privileges
     FLUSH PRIVILEGES;
