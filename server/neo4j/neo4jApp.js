@@ -1,5 +1,5 @@
 import express from 'express';
-import graphService from './graphService';
+import graphService from './graphService.js';
 
 
 const neo4jRouter = express.Router();

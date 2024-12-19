@@ -15,6 +15,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+/*
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -26,9 +27,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 configurePassport();
+ */
 
 
-app.use(authRoutes);
+//app.use(authRoutes);
 app.use(recipeCreation);
 app.use('/neo4j', neo4jRouter);
 app.use('/mongo', mongoRouter);
