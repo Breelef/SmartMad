@@ -2,11 +2,10 @@ import express from 'express';
 import graphService from './graphService';
 
 
-const router = express.Router();
-const prefixedRouter = express.Router();
+const neo4jRouter = express.Router();
 
 
-router.post('/ingredients', async (req, res) => {
+neo4jRouter.post('/ingredients', async (req, res) => {
   try {
     const ingredient = await graphService.createIngredient(req.body);
     res.status(201).json(ingredient);
@@ -15,7 +14,7 @@ router.post('/ingredients', async (req, res) => {
   }
 });
 
-router.get('/recipes/:id', async (req, res) => {
+neo4jRouter.get('/recipes/:id', async (req, res) => {
   try {
     const recipe = await graphService.getRecipeById(req.params.id);
     if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
@@ -25,7 +24,7 @@ router.get('/recipes/:id', async (req, res) => {
   }
 });
 
-router.get('/recipeIngredients/:id', async (req, res) => {
+neo4jRouter.get('/recipeIngredients/:id', async (req, res) => {
   try {
     const ingredients = await graphService.getAllIngredientsForRecipe(req.params.id);
     res.json(ingredients);
@@ -34,7 +33,7 @@ router.get('/recipeIngredients/:id', async (req, res) => {
   }
 });
 
+//const neo4jRouter = express.Router();
+//neo4jRouter.use('/graph', router);
 
-prefixedRouter.use('/graph', router);
-
-export default prefixedRouter;
+export default neo4jRouter;

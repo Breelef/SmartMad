@@ -2,11 +2,10 @@ import express from 'express';
 import modelService from './modelService';
 
 // Create a new router
-const router = express.Router();
-const prefixedRouter = express.Router();
+const mongoRouter = express.Router();
 
 // Define your routes
-router.post('/ingredients', async (req, res) => {
+mongoRouter.post('/ingredients', async (req, res) => {
   try {
     const ingredient = await modelService.createIngredient(req.body);
     res.status(201).json(ingredient);
@@ -15,7 +14,7 @@ router.post('/ingredients', async (req, res) => {
   }
 });
 
-router.get('/recipes/:id', async (req, res) => {
+mongoRouter.get('/recipes/:id', async (req, res) => {
   try {
     const recipe = await modelService.getRecipeById(req.params.id);
     if (!recipe) return res.status(404).json({ message: 'Recipe not found' });
@@ -25,7 +24,7 @@ router.get('/recipes/:id', async (req, res) => {
   }
 });
 
-router.get('/recipeIngredients/:id', async (req, res) => {
+mongoRouter.get('/recipeIngredients/:id', async (req, res) => {
   try {
     const ingredients = await modelService.getAllIngredientsForRecipe(req.params.id);
     res.json(ingredients);
@@ -35,6 +34,4 @@ router.get('/recipeIngredients/:id', async (req, res) => {
 });
 
 
-prefixedRouter.use('/mongo', router);
-
-export default prefixedRouter;
+export default mongoRouter;
