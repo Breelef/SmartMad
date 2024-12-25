@@ -21,11 +21,30 @@ const executeQuery = async (query, params = {}) => {
   }
 };
 
+// Generalized method to create nodes dynamically
+const createNode = async (label, properties) => {
+  const query = `CREATE (n:${label} $properties) RETURN n`;
+  const [result] = await executeQuery(query, { properties });
+  return result?.n?.properties || null;
+};
+
+// Generalized method to create relationships between nodes
+const createRelationship = async (startNode, endNode, relationshipType, params = {}) => {
+  const query = `
+    MATCH (start:${startNode.label} {${startNode.key}: $startValue}),
+          (end:${endNode.label} {${endNode.key}: $endValue})
+    CREATE (start)-[:${relationshipType}]->(end)
+  `;
+  await executeQuery(query, {
+    startValue: startNode.value,
+    endValue: endNode.value,
+    ...params,
+  });
+};
+
 const graphService = {
   createIngredient: async ({ name }) => {
-    const query = `CREATE (i:Ingredient {name: $name}) RETURN i`;
-    const [result] = await executeQuery(query, { name });
-    return result?.i?.properties || null;
+    return await createNode('Ingredient', { name });
   },
 
   getRecipeById: async (id) => {
@@ -52,7 +71,13 @@ const graphService = {
     const [result] = await executeQuery(query, { id: parseInt(id, 10) });
     return result?.ingredients || [];
   },
+
+  // Reusable executeQuery method for custom queries
   executeQuery,
+
+  // New methods for creating relationships and nodes dynamically
+  createRelationship,
+  createNode,
 };
 
 export default graphService;
