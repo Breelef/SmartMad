@@ -4,6 +4,8 @@ import { createPrompt } from "../service/userPromptService.js";
 import { createAiResponseFromPrompt } from "../service/aiResponseService.js";
 import { createRecipe } from "../service/recipeService.js";
 import { generateRecipe } from "../AI/gemini.js";
+import { generateResponseForUser } from "../AI/gemini.js";
+
 
 const router = Router();
 
@@ -40,6 +42,21 @@ router.post("/firstUserPrompt", async (req, res) => {
     }
 });
 
+router.post("/generateRecipeResponse", async (req, res) => {
+    console.log("Request received in generateRecipeResponse:", req.body);
+    try {
+        const { userMessage, recipe } = req.body;
+        console.log("userMessage", userMessage, "recipe", recipe);
+        const response = await generateResponseForUser(userMessage, recipe);
+        res.json({ answer: response });
+    } catch (error) {
+        console.error("Error processing the request:", error);
+        res.status(500).json({ error: "Failed to generate response" });
+    }
+});
+
+/*
+
 router.post("/recipeChosen", async (req, res) => {
     try{
         const { responseId, recipeChosenId } = req.body;
@@ -50,5 +67,6 @@ router.post("/recipeChosen", async (req, res) => {
         res.status(500).json({ error: "Failed to create recipe"});
     }
 });
+*/
 
 export default router;

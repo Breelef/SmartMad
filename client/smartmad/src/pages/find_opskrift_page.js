@@ -1,11 +1,8 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState, useMemo } from 'react';
 import placeholderImage from "../assets/placeholderImage.png";
 
 export const FindOpskriftPage = () => {
-  const [showVideo, setShowVideo] = useState(false);
-  const videoUrl = "https://www.youtube.com/embed/mhDJNfV7hjk";
-  const toggleVideo = () => setShowVideo(!showVideo);
 
   const routerLocation = useLocation();
   const { data } = routerLocation.state || {};
@@ -17,6 +14,34 @@ export const FindOpskriftPage = () => {
   const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
   const recipeData = recipes[currentRecipeIndex].data;
   console.log(recipeData);  
+
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  // Function to send the chosen recipe to the /recipeChosen endpoint
+  const handleRecipeChoice = async (selectedRecipeData) => {
+    try {
+      const response = await fetch('/recipeChosen', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedRecipeData),  // Send the selected recipe data
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send recipe data');
+      }
+
+      console.log('Recipe chosen successfully:', selectedRecipeData);
+    } catch (error) {
+      console.error('Error choosing recipe:', error);
+    }
+  };
+
+  // Function to navigate to the /chosenRecipe page and send recipe data
+  const handleCreateRecipe = (selectedRecipeData) => {
+    navigate('/chosen-recipe', { state: { recipe: selectedRecipeData } });  // Passing recipe data via state
+  };
 
   return (
     <div className="bg-gradient-to-b from-blue-800 to-blue-900 min-h-screen flex p-6 text-white">
@@ -73,29 +98,20 @@ export const FindOpskriftPage = () => {
           ))}
         </div>
 
-        {/* Video Section */}
-        <div className="mt-8">
-          <button
-            onClick={toggleVideo}
-            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300 shadow-md"
-          >
-            {showVideo ? "Skjul Video" : "Se Video"}
-          </button>
-          {showVideo && (
-            <iframe
-              className="w-full md:w-3/5 h-72 mx-auto rounded-lg border border-gray-300 mt-6 shadow-lg"
-              src={videoUrl}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          )}
-        </div>
 
         {/* Final Comment */}
         <div className="bg-gray-100 mt-8 p-6 rounded-lg shadow-lg text-gray-900 text-center">
           <p className="italic text-lg">{recipeData.final_comment}</p>
+        </div>
+
+        {/* "Create this recipe!" Button */}
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => handleCreateRecipe(recipeData)}
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg transition duration-300"
+          >
+            Lav denne opskrift med kokken
+          </button>
         </div>
       </div>
 
@@ -114,7 +130,10 @@ export const FindOpskriftPage = () => {
                 className="w-full h-32 object-cover rounded-lg"
               />
               <button
-                onClick={() => setCurrentRecipeIndex(index)}
+                onClick={() => {
+                  setCurrentRecipeIndex(index);
+                  handleRecipeChoice(recipe.data);  // Send chosen recipe to /recipeChosen
+                }}
                 className={`w-full mt-4 py-2 rounded-lg transition duration-300 ${
                   index === currentRecipeIndex ? 'bg-gray-400 text-gray-700 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
                 }`}
