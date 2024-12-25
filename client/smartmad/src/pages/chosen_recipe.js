@@ -7,7 +7,6 @@ export const ChosenRecipePage = () => {
 
     const [messages, setMessages] = useState([]);
     const [userMessage, setUserMessage] = useState('');
-    const [aiResponse, setAiResponse] = useState('');
 
     const [showVideo, setShowVideo] = useState(false);
     const videoUrl = "https://www.youtube.com/embed/mhDJNfV7hjk";
@@ -72,8 +71,6 @@ export const ChosenRecipePage = () => {
                 { sender: 'bot', text: responseData.answer },
             ]);
     
-            // Optionally, set the response to display in the input (optional)
-            setAiResponse(responseData.answer);
         })
         .catch((error) => {
             console.error('Error:', error);
