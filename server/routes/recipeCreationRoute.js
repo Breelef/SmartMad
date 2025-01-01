@@ -5,12 +5,13 @@ import { createAiResponseFromPrompt } from "../service/aiResponseService.js";
 import { createRecipe } from "../service/recipeService.js";
 import { generateRecipe } from "../AI/gemini.js";
 import { generateResponseForUser } from "../AI/gemini.js";
+import {authenticateToken} from "../middleware/auth.js";
 
 
 const router = Router();
 
 
-router.post("/firstUserPrompt", async (req, res) => {
+router.post("/firstUserPrompt", authenticateToken, async (req, res) => {
     try{
         const { userId, data } = req.body;
         const savedPromptId = await createPrompt(1, data);

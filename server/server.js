@@ -7,15 +7,16 @@ import {configurePassport} from "./auth/passportGoogle.js";
 import authRoutes from "./routes/authRoutes.js";
 import recipeCreation from "./routes/recipeCreationRoute.js";
 import neo4jRouter from "./neo4j/neo4jApp.js";
-import mongoRouter from "./mongoDB/mongoApp.js";
+import mongoRouter from "./mongoDB/mongoApp.js"
+
 
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
-/*
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -27,10 +28,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 configurePassport();
- */
 
 
-//app.use(authRoutes);
+
+app.use(authRoutes);
 app.use(recipeCreation);
 app.use('/neo4j', neo4jRouter);
 app.use('/mongo', mongoRouter);

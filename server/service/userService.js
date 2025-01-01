@@ -8,6 +8,12 @@ export async function findUserByEmail(email) {
     });
 }
 
+export async function findUserById(id) {
+    return prisma.user.findUnique({
+        where: {id},
+    });
+}
+
 export async function createUser(email, password, name){
     const existingUser = await prisma.user.findUnique({
         where: { email },
@@ -23,4 +29,28 @@ export async function createUser(email, password, name){
         }
     });
     return { id: newUser.id, name: newUser.name, email: newUser.email };
+}
+
+export async function softDeleteUserById(id){
+    try{
+        const now = new Date();
+        return await prisma.user.update({
+            where: {id: parseInt(id)},
+            data: {deletedAt: now},
+        });
+    }catch (error) {
+        console.error('Error soft-deleting user:', error);
+        throw error;
+  }
+}
+
+export async function deleteUserPermanently(id){
+    try{
+        return await prisma.user.delete({
+            where: { id: parseInt(id) }
+        });
+    }catch (error){
+        console.error('Error permanently deleting user:', error);
+        throw error;
+    }
 }
