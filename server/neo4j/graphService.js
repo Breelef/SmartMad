@@ -72,12 +72,9 @@ const graphService = {
     return result?.ingredients || [];
   },
 
-  // Reusable executeQuery method for custom queries
   executeQuery,
-    // New methods for creating relationships and nodes dynamically
   createRelationship,
   createNode,
-
   close: async () => {
     try {
       console.log('Closing Neo4j driver...');
