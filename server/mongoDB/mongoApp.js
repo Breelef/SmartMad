@@ -1,5 +1,5 @@
 import express from 'express';
-import modelService from './modelService';
+import modelService from './mongoService.js';
 
 // Create a new router
 const mongoRouter = express.Router();

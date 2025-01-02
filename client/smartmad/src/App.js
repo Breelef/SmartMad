@@ -6,6 +6,7 @@ import {FindOpskriftPage} from "./pages/find_opskrift_page.js";
 import {LoginPage} from "./pages/login_page.js";
 import {UdfyldTilOpskrift} from "./pages/udfyld_til_opskrift.js";
 import { SignupPage } from "./pages/signup_page.js";
+import { ChosenRecipePage } from "./pages/chosen_recipe.js";
 function App() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
@@ -23,6 +24,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <FindOpskriftPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chosen-recipe"
+              element={
+                <ProtectedRoute>
+                  <ChosenRecipePage />
                 </ProtectedRoute>
               }
             />

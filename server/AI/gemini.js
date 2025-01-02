@@ -62,3 +62,30 @@ If the measurements is in fractions then convert them to decimals, If the recipe
     throw new Error("The model did not return a valid JSON response.");
   }
 }
+
+
+export async function generateResponseForUser(userText, recipe) {
+  const model = await initializeAI();   
+
+  const prompt = `
+You are a creative cooking instruction bot. Your task is to help the user with the following recipe: 
+
+${JSON.stringify(recipe, null, 2)}
+
+With this recipe in mind, the user has the following question:
+
+${JSON.stringify(userText, null, 2)}
+
+Answer the question in danish. and be as specific as possible. give the answer in 3 sentences.
+`
+
+const result = await model.generateContent(prompt);
+  const cleanedText = cleanText(result.response.text());
+  try {
+    return cleanedText;
+  } catch (error) {
+    console.error("Failed to parse JSON response:", cleanedText);
+    throw new Error("The model did not return a valid JSON response.");
+  }
+
+}
