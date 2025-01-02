@@ -53,6 +53,14 @@ const graphService = {
     return result?.ingredients || [];
   },
   executeQuery,
+  close: async () => {
+    try {
+      console.log('Closing Neo4j driver...');
+      await driver.close();
+    } catch (error) {
+      console.error('Error closing Neo4j driver:', error);
+    }
+  },
 };
 
 export default graphService;

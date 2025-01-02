@@ -150,4 +150,10 @@ const seedGraphDatabase = async () => {
   }
 };
 
-seedGraphDatabase();
+try {
+  console.log('Starting seeding...');
+  await seedGraphDatabase();
+} finally {
+  await graphService.close();
+}
+
