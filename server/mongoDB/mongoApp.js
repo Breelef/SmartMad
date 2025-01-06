@@ -4,11 +4,30 @@ import modelService from './mongoService.js';
 // Create a new router
 const mongoRouter = express.Router();
 
-// Define your routes
+
 mongoRouter.post('/ingredients', async (req, res) => {
   try {
     const ingredient = await modelService.createIngredient(req.body);
     res.status(201).json(ingredient);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+mongoRouter.get('/ingredients', async (req, res) => {
+  try {
+    const ingredients = await modelService.getAllIngredients();
+    res.json(ingredients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+mongoRouter.get('/recipes', async (req, res) => {
+  try {
+    const recipes = await modelService.getAllRecipes();
+    res.json(recipes);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

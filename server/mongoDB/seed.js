@@ -8,11 +8,14 @@ import Recipe from "./models/Recipe.js";
 import User from "./models/User.js";
 import UserPrompt from "./models/UserPrompt.js";
 import { faker } from "@faker-js/faker";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const seedDatabase = async () => {
   try {
     // Connect to MongoDB
-    await mongoose.connect("mongodb://localhost:27017/Smartmad");
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to the mongoDB database.");
 
     //If database wipe is needed, outcomment:

@@ -72,6 +72,24 @@ const graphService = {
     return result?.ingredients || [];
   },
 
+  getAllIngredients: async () => {
+    const query = `
+      MATCH (i:Ingredient)
+      RETURN collect(i.name) AS ingredients
+    `;
+    const [result] = await executeQuery(query);
+    return result?.ingredients || [];
+  },
+
+  getAllRecipes: async () => {
+    const query = `
+      MATCH (r:Recipe)
+      RETURN collect(r) AS recipes
+    `;
+    const [result] = await executeQuery(query);
+    return result?.recipes.map(recipe => recipe.properties) || [];
+  },
+
   executeQuery,
   createRelationship,
   createNode,

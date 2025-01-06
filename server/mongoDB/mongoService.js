@@ -1,3 +1,7 @@
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+// Import your models
 import AIResponse from "../mongoDB/models/AIResponse.js";
 import Ingredient from "../mongoDB/models/Ingredient.js";
 import Instruction from "../mongoDB/models/Instruction.js";
@@ -7,7 +11,29 @@ import ModificationResponse from "../mongoDB/models/ModificationResponse.js";
 import User from "../mongoDB/models/User.js";
 import UserPrompt from "../mongoDB/models/UserPrompt.js";
 
+// Load environment variables from .env file
+dotenv.config();
 
+// MongoDB connection setup
+const connectMongo = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // Timeout in 5 seconds if MongoDB is unreachable
+      socketTimeoutMS: 45000,         // Timeout in 45 seconds for queries
+    });
+    console.log('Successfully connected to MongoDB');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1); // Exit the process if the connection fails
+  }
+};
+
+// Call the connection function to establish the MongoDB connection
+connectMongo();
+
+// Model Service functions
 const modelService = {
   //AIResponse
   createAIResponse: async (data) => await AIResponse.create(data),
