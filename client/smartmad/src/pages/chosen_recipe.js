@@ -12,33 +12,14 @@ export const ChosenRecipePage = () => {
     const videoUrl = "https://www.youtube.com/embed/mhDJNfV7hjk";
     const toggleVideo = () => setShowVideo(!showVideo);
 
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * Handles the submission of a user message.
- * 
- * Prevents the default form submission behavior, updates the message state
- * to include the user's message, and sends the user's message and selected
- * recipe data to the server for generating a response.
- * 
- * The server response is expected to contain an AI-generated answer, which
- * is then added to the conversation state and optionally set as the current
- * AI response.
- * 
- * Logs data and server responses for debugging and clears the input field
- * after submission.
- * 
- * @param {Event} e - The event object from the form submission.
- */
-
-/******  fbad51ea-1c28-403b-9683-9cac4c1c6a39  *******/
     const handleMessageSubmit = (e) => {
         e.preventDefault();
-    
+
         setMessages((prevMessages) => [
             ...prevMessages,
             { sender: 'user', text: userMessage },
         ]);
-    
+
 
         const data = {
             userMessage: userMessage,
@@ -46,7 +27,7 @@ export const ChosenRecipePage = () => {
         };
 
         console.log("Sending data: (log in chosen_recipe.js)", data);
-    
+
         fetch('http://localhost:8080/generateRecipeResponse', {
             method: 'POST',
             headers: {
@@ -54,28 +35,28 @@ export const ChosenRecipePage = () => {
             },
             body: JSON.stringify(data),
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(responseData => {
-            // Log the response data for debugging
-            console.log("AI response data:", responseData);
-            console.log('AI response:', responseData.answer);  // This should print the AI answer
-    
-            // Add AI response to the conversation
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { sender: 'bot', text: responseData.answer },
-            ]);
-    
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(responseData => {
+                // Log the response data for debugging
+                console.log("AI response data:", responseData);
+                console.log('AI response:', responseData.answer);  // This should print the AI answer
+
+                // Add AI response to the conversation
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    { sender: 'bot', text: responseData.answer },
+                ]);
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
         // Clear the input field after submission
         setUserMessage('');
     };
@@ -126,10 +107,12 @@ export const ChosenRecipePage = () => {
                 <h2 className="text-2xl font-bold mt-8 mb-4 border-b pb-2 border-blue-400">Fremgangsmåde</h2>
                 {recipe?.instructions?.map((instruction, index) => (
                     <div key={index} className="mb-4">
-                        <h3 className="font-semibold text-xl text-blue-600 mb-2">{instruction.part}</h3>
-                        <ul className="list-decimal list-inside space-y-2">
+                        <h3 className="font-semibold text-xl text-blue-600 mb-2">{instruction.titel}</h3>
+                        <ul className="list-inside space-y-2">
                             {instruction.steps?.map((step, i) => (
-                                <li key={i}>{step}</li>
+                                <li key={i}>
+                                    {i + 1}. {step} {/* No multiplication for numbering */}
+                                </li>
                             ))}
                         </ul>
                     </div>

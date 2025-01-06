@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import placeholderImage from "../assets/placeholderImage.png";
 import { LogoutButton } from "../components/logout_knap.js";
 
@@ -13,12 +13,13 @@ export const FindOpskriftPage = () => {
   console.log(recipes[0].name);
 
   const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
-  const recipeData = recipes[currentRecipeIndex].data;
-  console.log(recipeData);  
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const recipeData = recipes[currentRecipeIndex];
+  console.log("name:", recipeData.name);
 
-  // Function to send the chosen recipe to the /recipeChosen endpoint
+  const navigate = useNavigate();
+
+
   const handleRecipeChoice = async (selectedRecipeData) => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -41,7 +42,6 @@ export const FindOpskriftPage = () => {
     }
   };
 
-  // Function to navigate to the /chosenRecipe page and send recipe data
   const handleCreateRecipe = (selectedRecipeData) => {
     navigate('/chosen-recipe', { state: { recipe: selectedRecipeData } });  // Passing recipe data via state
   };
@@ -51,23 +51,23 @@ export const FindOpskriftPage = () => {
       {/* Main Content */}
       <div className="flex-1 pr-8">
         <div className="text-center mb-8">
-          <LogoutButton/>
+          <LogoutButton />
         </div>
         {/* Back Button */}
         <div className="mb-4">
           <button
-              onClick={() => window.history.back()}
-              className="text-white hover:text-gray-300 transition duration-300"
+            onClick={() => window.history.back()}
+            className="text-white hover:text-gray-300 transition duration-300"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                 className="h-8 w-8">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/>
+              className="h-8 w-8">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
         </div>
 
         {/* Recipe Title */}
-        <h1 className="text-4xl font-extrabold mb-6">{recipeData.name}</h1>
+        <h1 className="text-4xl font-extrabold mb-6">{recipes[currentRecipeIndex].name}</h1>
 
         {/* Time Section */}
         <div className="bg-gray-100 text-gray-900 p-6 rounded-lg shadow-lg mb-6">
@@ -84,24 +84,26 @@ export const FindOpskriftPage = () => {
           <h2 className="text-2xl font-bold mb-4 border-b pb-2 border-blue-400">Ingredienser</h2>
           <ul className="space-y-2">
             {recipeData.ingredients.map((ingredient, index) => (
-                <li key={index}>
-                  {ingredient.value} {ingredient.unit} {ingredient.name}
-                  {ingredient.comment && <span className="text-gray-600"> ({ingredient.comment})</span>}
-                </li>
+              <li key={index}>
+                {ingredient.value} {ingredient.unit} {ingredient.name}
+                {ingredient.comment && <span className="text-gray-600"> ({ingredient.comment})</span>}
+              </li>
             ))}
           </ul>
 
           {/* Instructions Section */}
           <h2 className="text-2xl font-bold mt-8 mb-4 border-b pb-2 border-blue-400">Fremgangsmåde</h2>
-          {recipeData.instructions.map((instruction, index) => (
-              <div key={index} className="mb-4">
-                <h3 className="font-semibold text-xl text-blue-600 mb-2">{instruction.part}</h3>
-                <ul className="list-decimal list-inside space-y-2">
-                  {instruction.steps.map((step, i) => (
-                      <li key={i}>{step}</li>
-                  ))}
-                </ul>
-              </div>
+          {recipeData?.instructions?.map((instruction, index) => (
+            <div key={index} className="mb-4">
+              <h3 className="font-semibold text-xl text-blue-600 mb-2">{instruction.titel}</h3>
+              <ul className="list-inside space-y-2">
+                {instruction.steps?.map((step, i) => (
+                  <li key={i}>
+                    { i + 1}. {step} {/* No multiplication for numbering */}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
 
@@ -114,8 +116,8 @@ export const FindOpskriftPage = () => {
         {/* "Create this recipe!" Button */}
         <div className="mt-6 text-center">
           <button
-              onClick={() => handleCreateRecipe(recipeData)}
-              className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg transition duration-300"
+            onClick={() => handleCreateRecipe(recipeData)}
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg transition duration-300"
           >
             Lav denne opskrift med kokken
           </button>
@@ -128,25 +130,24 @@ export const FindOpskriftPage = () => {
         <div className="flex flex-col gap-6">
           {recipes.map((recipe, index) => (
             <div
-              key={recipe.data.recipe_id || index}
+              key={recipe.recipe_id || index}
               className="bg-gray-100 text-gray-900 rounded-lg shadow-md p-4 hover:scale-105 transition-transform duration-300"
             >
               <img
                 src={placeholderImage}
-                alt={recipe.data.name}
+                alt={recipe.name}
                 className="w-full h-32 object-cover rounded-lg"
               />
               <button
                 onClick={() => {
                   setCurrentRecipeIndex(index);
-                  handleRecipeChoice(recipe.data);  // Send chosen recipe to /recipeChosen
+                  handleRecipeChoice(recipe);
                 }}
-                className={`w-full mt-4 py-2 rounded-lg transition duration-300 ${
-                  index === currentRecipeIndex ? 'bg-gray-400 text-gray-700 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
-                }`}
+                className={`w-full mt-4 py-2 rounded-lg transition duration-300 ${index === currentRecipeIndex ? 'bg-gray-400 text-gray-700 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
+                  }`}
                 disabled={index === currentRecipeIndex}
               >
-                {recipe.data.name}
+                {recipe.name}
               </button>
             </div>
           ))}
