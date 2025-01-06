@@ -46,12 +46,13 @@ export const ClearOut = () => {
   // Handle JSON submission
   const handleSubmit = () => {
     const data = createJSON();
-
+    const token = localStorage.getItem("accessToken");
     console.log('Data to submit:', JSON.stringify(data));
 
     fetch('http://localhost:8080/firstUserPrompt', {
         method: 'POST',
         headers: {
+            "Authorization": `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),

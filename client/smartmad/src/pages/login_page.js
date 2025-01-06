@@ -2,7 +2,7 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLoginComponent } from "../components/googleLogin.js";
 import { RecipeButton } from "../components/find_opskrifter_knap.js";
 
 export const LoginPage = () => {
@@ -27,7 +27,7 @@ export const LoginPage = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await fetch("http://localhost:8080/login", {
+        const response = await fetch("http://localhost:8080/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -38,47 +38,23 @@ export const LoginPage = () => {
           }),
         });
 
+        const data = await response.json();
+        console.log(data);
+
         // Handle successful login
-        if (response.data.success) {
+        if (data.accessToken) {
           console.log("User logged in successfully");
-          navigate("/dashboard"); // Redirect to dashboard (or other page)
+          localStorage.setItem("accessToken", data.accessToken);
+          navigate("/udfyld-til-opskrift"); // Redirect to dashboard (or other page)
         } else {
-          console.error("Login failed", response.data.message);
-          alert("Login failed: " + response.data.message);
+          console.error("Login failed", data.message);
+          alert("Login failed: " + data.message);
         }
       } catch (error) {
         console.error("Error during login", error);
-        alert("An error occurred during login. Please try again.");
       }
     },
   });
-
-  // Google login success handler
-  const handleGoogleLogin = async (response) => {
-    try {
-      // Send the Google token to the backend for authentication
-      const googleResponse = await fetch("http://localhost:8080/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: response.credential,
-        }),
-      });
-
-      if (googleResponse.data.success) {
-        console.log("Google login successful");
-        navigate("/dashboard");
-      } else {
-        alert("Google login failed: " + googleResponse.data.message);
-      }
-    } catch (error) {
-      console.error("Error during Google login", error);
-      alert("An error occurred during Google login.");
-    }
-  };
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-blue-900">
       <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
@@ -129,10 +105,7 @@ export const LoginPage = () => {
 
         {/* Google login button */}
         <div className="mt-4">
-          <GoogleLogin
-            onSuccess={handleGoogleLogin}
-            onError={() => console.log("Google Login Failed")}
-          />
+          <GoogleLoginComponent />
         </div>
       </div>
     </div>

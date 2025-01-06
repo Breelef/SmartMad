@@ -1,4 +1,5 @@
 import {PrismaClient} from '@prisma/client';
+import {extractAuthToken, verifyToken} from "../auth/authHelpers.js";
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,16 @@ export async function findUserById(id) {
     return prisma.user.findUnique({
         where: {id},
     });
+}
+export async function findUserByToken(req){
+    try{
+        const token = extractAuthToken(req);
+        const decoded = verifyToken(token, process.env.JWT_SECRET);
+        return findUserByEmail(decoded.email);
+    }catch (e) {
+        console.error('Error finding user:', e);
+        throw e;
+    }
 }
 
 export async function createUser(email, password, name){

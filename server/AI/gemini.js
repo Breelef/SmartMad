@@ -40,25 +40,24 @@ export async function generateRecipe(userJSON) {
   }
 
   const prompt = `
-You are a creative cooking instruction bot. Your task is to generate a unique and original recipe based on the following input:
+You are a creative cooking instruction bot. Your task is to generate unique and original recipes based on the following input:
 
 ${JSON.stringify(userJSON, null, 2)}
 
-Create Three NEW recipes that uses the given ingredients and matches the user's preferences. Be creative and original.
+Create Three NEW recipes inside an array of a json object that uses the given ingredients and matches the user's preferences. Be creative and original.
 
-Your response should be in 1 JSON file where each recipe is marked with recipe_index (1,2 and 3) and in danish language and follow this schema:
+Your response should be in 1 JSON file and in danish language and follow this schema:
 
 ${JSON.stringify(outputStructure, null, 2)}
 
-Fill in all fields with appropriate content. Be creative with the recipe name, ingredients, and instructions while staying true to the user's input and preferences. Ensure that your response is a valid JSON object.
+Fill in all fields with appropriate content. Be creative with the recipe name, ingredients, and instructions while staying true to the user's input and preferences. Ensure that your response is a valid JSON object and you give the right types in the JSON. If you need a string to represent a number value then just put 0.
 If the measurements is in fractions then convert them to decimals, If the recipe includes any kind of meat that needs preparation, also add the process of preparing it as a part of the preparation steps.`;
 
-  const result = await model.generateContent(prompt);
-  const cleanedText = cleanText(result.response.text());
   try {
-    return cleanedText;
+    const result = await model.generateContent(prompt);
+    return cleanText(result.response.text());
   } catch (error) {
-    console.error("Failed to parse JSON response:", cleanedText);
+    console.error("Failed to parse JSON response:", result);
     throw new Error("The model did not return a valid JSON response.");
   }
 }

@@ -7,6 +7,8 @@ import {LoginPage} from "./pages/login_page.js";
 import {UdfyldTilOpskrift} from "./pages/udfyld_til_opskrift.js";
 import { SignupPage } from "./pages/signup_page.js";
 import { ChosenRecipePage } from "./pages/chosen_recipe.js";
+
+
 function App() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
@@ -14,28 +16,28 @@ function App() {
           <Routes>
                 <Route path="/signup" element={<SignupPage />}/>
                 <Route path="/login" element={<LoginPage />} />
-            <Route path="/udfyld-til-opskrift" element={
-              <ProtectedRoute>
-                <UdfyldTilOpskrift />
-              </ProtectedRoute>
-              } />
-            <Route
-              path="/find-opskrift"
-              element={
-                <ProtectedRoute>
-                  <FindOpskriftPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/chosen-recipe"
-              element={
-                <ProtectedRoute>
-                  <ChosenRecipePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/" element={<Navigate to="/login" />}/>
+                <Route path="/udfyld-til-opskrift" element={
+                  <ProtectedRoute>
+                    <UdfyldTilOpskrift />
+                  </ProtectedRoute>
+                  } />
+                <Route
+                  path="/find-opskrift"
+                  element={
+                    <ProtectedRoute>
+                      <FindOpskriftPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/chosen-recipe"
+                  element={
+                    <ProtectedRoute>
+                      <ChosenRecipePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/" element={<Navigate to="/login" />}/>
           </Routes>
         </Router>
     </GoogleOAuthProvider>

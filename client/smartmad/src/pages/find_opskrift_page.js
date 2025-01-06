@@ -1,15 +1,16 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState, useMemo } from 'react';
 import placeholderImage from "../assets/placeholderImage.png";
+import { LogoutButton } from "../components/logout_knap.js";
 
 export const FindOpskriftPage = () => {
 
   const routerLocation = useLocation();
   const { data } = routerLocation.state || {};
-  console.log("recipe", data.recipes[0].recipes[0].data.name);
-  const recipes = useMemo(() => data?.recipes?.[0]?.recipes || [], [data?.recipes]);
+  console.log("data", data);
+  const recipes = data.data.jsonRecipes.recipes;
   console.log(recipes);
-  console.log(recipes[0].data.name);
+  console.log(recipes[0].name);
 
   const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
   const recipeData = recipes[currentRecipeIndex].data;
@@ -20,9 +21,11 @@ export const FindOpskriftPage = () => {
   // Function to send the chosen recipe to the /recipeChosen endpoint
   const handleRecipeChoice = async (selectedRecipeData) => {
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await fetch('/recipeChosen', {
         method: 'POST',
         headers: {
+          "Authorization": `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(selectedRecipeData),  // Send the selected recipe data
@@ -47,14 +50,18 @@ export const FindOpskriftPage = () => {
     <div className="bg-gradient-to-b from-blue-800 to-blue-900 min-h-screen flex p-6 text-white">
       {/* Main Content */}
       <div className="flex-1 pr-8">
+        <div className="text-center mb-8">
+          <LogoutButton/>
+        </div>
         {/* Back Button */}
         <div className="mb-4">
           <button
-            onClick={() => window.history.back()}
-            className="text-white hover:text-gray-300 transition duration-300"
+              onClick={() => window.history.back()}
+              className="text-white hover:text-gray-300 transition duration-300"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-8 w-8">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                 className="h-8 w-8">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/>
             </svg>
           </button>
         </div>
@@ -77,24 +84,24 @@ export const FindOpskriftPage = () => {
           <h2 className="text-2xl font-bold mb-4 border-b pb-2 border-blue-400">Ingredienser</h2>
           <ul className="space-y-2">
             {recipeData.ingredients.map((ingredient, index) => (
-              <li key={index}>
-                {ingredient.value} {ingredient.unit} {ingredient.name}
-                {ingredient.comment && <span className="text-gray-600"> ({ingredient.comment})</span>}
-              </li>
+                <li key={index}>
+                  {ingredient.value} {ingredient.unit} {ingredient.name}
+                  {ingredient.comment && <span className="text-gray-600"> ({ingredient.comment})</span>}
+                </li>
             ))}
           </ul>
 
           {/* Instructions Section */}
           <h2 className="text-2xl font-bold mt-8 mb-4 border-b pb-2 border-blue-400">Fremgangsmåde</h2>
           {recipeData.instructions.map((instruction, index) => (
-            <div key={index} className="mb-4">
-              <h3 className="font-semibold text-xl text-blue-600 mb-2">{instruction.part}</h3>
-              <ul className="list-decimal list-inside space-y-2">
-                {instruction.steps.map((step, i) => (
-                  <li key={i}>{step}</li>
-                ))}
-              </ul>
-            </div>
+              <div key={index} className="mb-4">
+                <h3 className="font-semibold text-xl text-blue-600 mb-2">{instruction.part}</h3>
+                <ul className="list-decimal list-inside space-y-2">
+                  {instruction.steps.map((step, i) => (
+                      <li key={i}>{step}</li>
+                  ))}
+                </ul>
+              </div>
           ))}
         </div>
 
@@ -107,8 +114,8 @@ export const FindOpskriftPage = () => {
         {/* "Create this recipe!" Button */}
         <div className="mt-6 text-center">
           <button
-            onClick={() => handleCreateRecipe(recipeData)}
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg transition duration-300"
+              onClick={() => handleCreateRecipe(recipeData)}
+              className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg transition duration-300"
           >
             Lav denne opskrift med kokken
           </button>

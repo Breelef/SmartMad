@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { hashPassword } from "../auth/authHelpers.js";
 
 const prisma = new PrismaClient();
 
@@ -14,6 +15,16 @@ async function seed() {
         createdAt: new Date(),
         updatedAt: new Date(),
       })),
+    });
+    const hashedPassword = await hashPassword("ForTestingPurposesOnly");
+    const testUser = await prisma.user.create({
+        data: {
+          name: "Test User",
+          email: "testuser@test.com",
+          password: hashedPassword,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
     });
     const users = await prisma.user.findMany();
 

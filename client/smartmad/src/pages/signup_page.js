@@ -3,7 +3,7 @@ import { RecipeButton } from "../components/find_opskrifter_knap.js";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { GoogleLogin } from "@react-oauth/google";  // Import the GoogleLogin component
+import {GoogleSignupComponent} from "../components/googleLogin.js";  // Import the GoogleLogin component
 
 export const SignupPage = () => {
     const navigate = useNavigate();
@@ -28,7 +28,7 @@ export const SignupPage = () => {
         validationSchema,
         onSubmit: async (values) => {
             try {
-                const response = await fetch("localhost:8080/signup", {
+                const response = await fetch("http://localhost:8080/auth/signup", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(values),
@@ -47,39 +47,6 @@ export const SignupPage = () => {
             }
         },
     });
-
-    // Handle Google OAuth success
-    const handleGoogleLogin = async (response) => {
-        const { credential } = response;
-        const userData = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-            headers: {
-                Authorization: `Bearer ${credential}`,
-            },
-        }).then((res) => res.json());
-
-        // Assuming you handle creating/signing up the user with the received user data
-        const googleUser = {
-            name: userData.name,
-            email: userData.email,
-            oauthId: userData.sub,
-            oauthProvider: "google",
-        };
-
-        // Send the Google OAuth user data to your backend
-        const signupResponse = await fetch("localhost:8080/signup/google", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(googleUser),
-        });
-
-        if (!signupResponse.ok) {
-            const errorData = await signupResponse.json();
-            console.error("Google signup failed:", errorData);
-            alert(`Signup failed: ${errorData.message || "Unknown error"}`);
-            return;
-        }
-        navigate("/login");
-    };
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-blue-900">
@@ -143,10 +110,7 @@ export const SignupPage = () => {
 
                 {/* Google login button */}
                 <div className="mt-4">
-                    <GoogleLogin
-                        onSuccess={handleGoogleLogin}
-                        onError={() => alert('Google login failed!')}
-                    />
+                    <GoogleSignupComponent />
                 </div>
             </div>
         </div>

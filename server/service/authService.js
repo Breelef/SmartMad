@@ -84,15 +84,17 @@ export const signup = async (req, res) => {
 
 export const logout = async (req, res) => {
   const token = extractAuthToken(req);
-    if (!token) {
-        return res.status(401).send("Authentication token is required");
-    }
+  if (!token) {
+    return res.status(401).send("Authentication token is required");
+  }
 
   try {
-      const { exp } = decodeToken(token);
-      const ttl = exp ? exp - Math.floor(Date.now() / 1000) : 3600;
-      await redisSet(`blacklisted:${token}`, 'revoked', ttl);
-      res.status(200).send("Logged out successfully");
+    const { exp } = decodeToken(token);
+    const ttl = exp ? Math.max(exp - Math.floor(Date.now() / 1000), 0) : 3600;
+
+
+    await redisSet(`blacklisted:${token}`, 'revoked', ttl);
+    res.status(200).send("Logged out successfully");
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal server error");

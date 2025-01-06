@@ -4,6 +4,7 @@ import {login, verify, refreshToken, logout, signup, softDeleteUser, deleteUserP
 import {generateToken} from "../auth/authHelpers.js";
 import { PrismaClient } from "@prisma/client";
 import {findUserByEmail} from "../service/userService.js";
+import {authenticateToken} from "../middleware/auth.js";
 
 const prisma = new PrismaClient();
 
@@ -137,7 +138,7 @@ router.get("/auth/google/login/callback", async (req, res) => {
 router.post('/auth/login', login);
 router.post('/auth/signup', signup);
 router.post('/auth/logout', logout);
-router.get("/auth/verify", verify);
+router.get("/auth/verify", authenticateToken, verify);
 router.post("/auth/refresh", refreshToken);
 router.put("/auth/softDelete", softDeleteUser);
 router.delete("/auth/delete", deleteUserPermanent);

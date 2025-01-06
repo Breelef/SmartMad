@@ -6,41 +6,31 @@ import { createRecipe } from "../service/recipeService.js";
 import { generateRecipe } from "../AI/gemini.js";
 import { generateResponseForUser } from "../AI/gemini.js";
 import {authenticateToken} from "../middleware/auth.js";
+import {extractAuthToken, verifyToken} from "../auth/authHelpers.js";
+import { findUserByToken } from "../service/userService.js";
 
 
 const router = Router();
 
 
 router.post("/firstUserPrompt", authenticateToken, async (req, res) => {
-    try{
-        const { userId, data } = req.body;
-        const savedPromptId = await createPrompt(1, data);
-
-        const response = await generateRecipe(data); 
-
-        console.log(response);
-        const list = response.recipes;
-        console.log(list)
-
+      try {
+        const { data } = req.body;
+        const user = await findUserByToken(req);
+        const savedPromptId = await createPrompt(user.id, data);
+        const response = await generateRecipe(data);
         const savedAiResponse = await createAiResponseFromPrompt(savedPromptId, response);
-
-        const jsonStrings = response.split('$').map(str => str.trim()).filter(Boolean);
-        const jsonObjects = jsonStrings.map((str, index) => {
-            try {
-                return JSON.parse(str);
-            } catch (parseError) {
-                console.error(`Error parsing JSON at index ${index}:`, parseError);
-                return null; 
-            }
-        }).filter(obj => obj !== null);
-        
-
-        res.json({ recipes: jsonObjects });
-
-    }catch (e) {
+        const jsonRecipes = JSON.parse(savedAiResponse.response);
+        const AIResponseAndRecipesInJSON = {savedAiResponse, jsonRecipes}
+        res.status(200).json({ status: 'success', data: AIResponseAndRecipesInJSON });
+      } catch (e) {
         console.error("Error creating response:", e);
-        res.status(500).json({ error: "Failed to create response"});
-    }
+        res.status(500).json({
+          status: 'error',
+          message: 'Failed to create response',
+          details: e.message || 'Internal server error',
+        });
+      }
 });
 
 router.post("/generateRecipeResponse", async (req, res) => {
@@ -56,18 +46,21 @@ router.post("/generateRecipeResponse", async (req, res) => {
     }
 });
 
-/*
-
 router.post("/recipeChosen", async (req, res) => {
     try{
-        const { responseId, recipeChosenId } = req.body;
-        const recipe = await createRecipe(responseId, recipeChosenId);
+        const { responseId, recipeChosenIndex } = req.body;
+        const recipe = await createRecipe(responseId, recipeChosenIndex);
         res.json(recipe);
     }catch (e){
         console.error("Error creating recipe:", e);
         res.status(500).json({ error: "Failed to create recipe"});
     }
 });
-*/
+
+router.get("/getToken", authenticateToken, (req, res) => {
+    const token = extractAuthToken(req);
+    const decoded = verifyToken(token, process.env.JWT_SECRET);
+    res.json(decoded);
+});
 
 export default router;
