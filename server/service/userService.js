@@ -4,14 +4,15 @@ import {extractAuthToken, verifyToken} from "../auth/authHelpers.js";
 const prisma = new PrismaClient();
 
 export async function findUserByEmail(email) {
-    return prisma.user.findUnique({
-        where: {email},
-    });
+    return prisma.user.findFirst({
+    where: { email: email },
+  });
 }
 
 export async function findUserById(id) {
+    const findId = parseInt(id);
     return prisma.user.findUnique({
-        where: {id},
+        where: {id: findId},
     });
 }
 export async function findUserByToken(req){
@@ -40,6 +41,25 @@ export async function createUser(email, password, name){
         }
     });
     return { id: newUser.id, name: newUser.name, email: newUser.email };
+}
+
+export const findAllUsers = async () => {
+  try {
+      return await prisma.user.findMany();
+  } catch (error) {
+    throw new Error('Failed to fetch users');
+  }
+};
+
+export const updateUser = async (id, name, email, password) => {
+  try {
+      return await prisma.user.update({
+        where: {id: parseInt(id, 10)},
+        data: {name, email, password},
+    });
+  } catch (error) {
+    throw new Error('Failed to update user');
+  }
 }
 
 export async function softDeleteUserById(id){
