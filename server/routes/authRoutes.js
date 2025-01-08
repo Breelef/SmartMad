@@ -140,9 +140,6 @@ router.post('/auth/signup', signup);
 router.post('/auth/logout', logout);
 router.get("/auth/verify", authenticateToken, verify);
 router.post("/auth/refresh", refreshToken);
-router.put("/auth/softDelete", softDeleteUser);
-router.delete("/auth/delete", deleteUserPermanent);
-router.get("/auth/deleteQuick", deleteUserQuick);
 
 
 export default router;

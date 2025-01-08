@@ -135,45 +135,6 @@ export const googleOAuth = async (accessToken, refreshToken, profile, done) => {
   }
 };
 
-export const updateUser = async (req, res) => {
-    const { userId, newEmail, oldPassword, newPassword } = req.body;
-    try{
-        const user = await prisma.user.findUnique({
-              where: {
-                  id: parseInt(userId),
-              },
-        });
-        if(!user){
-            return res.status(404).json({ message: "User not found" });
-        }
-        const updateData = {};
-        if(newEmail && newEmail !== user.email) {
-            const emailExists = await User.findOne({ where: newEmail });
-            if (emailExists) {
-                return res.status(409).json({ message: "Email already in use" });
-            }
-            updateData.email = newEmail;
-        }
-        if (newPassword && oldPassword){
-            const isMatch = await comparePasswords(oldPassword, user.password);
-            if(!isMatch){
-                 return res.status(401).json({ message: "Old password is incorrect" });
-            }
-            updateData.password = await hashPassword(newPassword, 12);
-        }
-        if (Object.keys(updateData).length > 0) {
-            await prisma.user.update({
-                where: { id: parseInt(userId) },
-                data: updateData,
-            });
-        }
-
-        res.json({ message: "User updated successfully" });
-    }catch (error){
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-}
 
 export const softDeleteUser = async (req, res) => {
     const { userId, password } = req.body;
@@ -218,7 +179,7 @@ export const deleteUserPermanent = async (req, res) => {
 export const deleteUserQuick = async (req, res) => {
     try{
         const user = await prisma.user.findUnique({
-            where: { email: "emil_vinther@hotmail.com" },
+            where: { email: "examtest@user.com" },
         });
         if (!user) {
             return res.status(404).json({ message: "User not found" });

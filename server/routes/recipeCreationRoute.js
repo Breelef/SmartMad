@@ -1,5 +1,4 @@
 import { Router } from "express";
-import passport from "passport";
 import { createPrompt } from "../service/userPromptService.js";
 import { createAiResponseFromPrompt } from "../service/aiResponseService.js";
 import { createRecipe } from "../service/recipeService.js";

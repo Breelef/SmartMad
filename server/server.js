@@ -6,6 +6,7 @@ import session from "express-session";
 import { configurePassport } from "./auth/passportGoogle.js";
 import authRoutes from "./routes/authRoutes.js";
 import recipeCreation from "./routes/recipeCreationRoute.js";
+import userRoutes from "./routes/userRoutes.js";
 import neo4jRouter from "./neo4j/neo4jApp.js";
 import mongoRouter from "./mongoDB/mongoApp.js";
 import sqlCrudRouter from "./routes/sqlCrudRouter.js";
