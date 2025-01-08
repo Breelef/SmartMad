@@ -16,11 +16,11 @@ async function seed() {
         updatedAt: new Date(),
       })),
     });
-    const hashedPassword = await hashPassword("ForTestingPurposesOnly");
+    const hashedPassword = await hashPassword("admin123");
     const testUser = await prisma.user.create({
         data: {
           name: "Test User",
-          email: "testuser@test.com",
+          email: "admin@admin.com",
           password: hashedPassword,
           createdAt: new Date(),
           updatedAt: new Date(),

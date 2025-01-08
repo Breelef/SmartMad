@@ -5,6 +5,17 @@
 
     const prisma = new PrismaClient();
 
+    export async function getAllRecipes() {
+        const recipes = await prisma.recipe.findMany({
+            include: {
+                instructions: true,
+                ingredients: true,
+            },
+        });
+    
+        return recipes;
+    }
+
     export async function createRecipe(aiResponseId, recipeIndex){
         const response = await getAiResponseFromId(aiResponseId);
         
@@ -36,3 +47,4 @@
             },
         });
     }
+
