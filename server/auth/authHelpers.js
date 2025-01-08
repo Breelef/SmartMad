@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import {checkTokenBlacklist} from "./redisOperations.js";
 
 export const generateToken = (email, secret, expiresIn) => {
     return jwt.sign({ email }, secret, { expiresIn });

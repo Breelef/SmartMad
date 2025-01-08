@@ -20,7 +20,7 @@ export const login = async (req, res) => {
             return res.status(401).send("Invalid password to the user");
         }
 
-        const accessToken = generateToken(email, process.env.JWT_SECRET, '15m');
+        const accessToken = generateToken(email, process.env.JWT_SECRET, '60m');
         res.status(200).json({ accessToken });
 
     } catch (error) {
@@ -86,6 +86,10 @@ export const logout = async (req, res) => {
   const token = extractAuthToken(req);
   if (!token) {
     return res.status(401).send("Authentication token is required");
+  }
+
+  if(!verify(req)){
+      return res.status(401).send("Authentication token is not valid");
   }
 
   try {
