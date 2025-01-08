@@ -143,7 +143,6 @@ export const ChosenRecipePage = () => {
             <div className="w-80 sticky top-6 self-start ml-8">
                 <div className="bg-white p-6 rounded-lg shadow-lg h-full max-h-[500px] flex flex-col">
                     <div className="flex-1 overflow-auto space-y-4 mb-4">
-                        {/* Display messages */}
                         {messages.map((message, index) => (
                             <div
                                 key={index}
@@ -159,7 +158,7 @@ export const ChosenRecipePage = () => {
                             type="text"
                             value={userMessage}
                             onChange={(e) => setUserMessage(e.target.value)}
-                            placeholder="Ask a question..."
+                            placeholder="Spørg kokken!"
                             className="flex-1 p-2 rounded-lg border border-gray-300 text-black"
                         />
                         <button

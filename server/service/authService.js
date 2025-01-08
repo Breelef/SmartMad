@@ -20,7 +20,7 @@ export const login = async (req, res) => {
             return res.status(401).send("Invalid password to the user");
         }
 
-        const accessToken = generateToken(email, process.env.JWT_SECRET, '15m');
+        const accessToken = generateToken(email, process.env.JWT_SECRET, '60m');
         res.status(200).json({ accessToken });
 
     } catch (error) {

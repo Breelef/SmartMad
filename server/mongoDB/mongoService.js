@@ -91,6 +91,13 @@ const modelService = {
       .populate("recipe_ingredients")
       .populate("modifications")
       .populate("users"),
+      getRecipeByName: async (name) => {
+        return await Recipe.findOne({ name: name }) // Find recipe by name
+          .populate("instructions")
+          .populate("recipe_ingredients")
+          .populate("modifications")
+          .populate("users");
+      },
   getAllRecipes: async () => await Recipe.find(),
   updateRecipe: async (id, data) =>
     await Recipe.findByIdAndUpdate(id, data, { new: true }),
