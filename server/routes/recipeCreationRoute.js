@@ -4,8 +4,8 @@ import { createAiResponseFromPrompt } from "../service/aiResponseService.js";
 import { createRecipe } from "../service/recipeService.js";
 import { generateRecipe } from "../AI/gemini.js";
 import { generateResponseForUser } from "../AI/gemini.js";
-import {authenticateToken} from "../middleware/auth.js";
-import {extractAuthToken, verifyToken} from "../auth/authHelpers.js";
+import { authenticateToken } from "../middleware/auth.js";
+import { extractAuthToken, verifyToken } from "../auth/authHelpers.js";
 import { findUserByToken } from "../service/userService.js";
 
 
@@ -47,6 +47,7 @@ router.post("/generateRecipeResponse", async (req, res) => {
 
 router.post("/recipeChosen", async (req, res) => {
     try{
+        console.log(req.body);
         const { responseId, recipeChosenIndex } = req.body;
         const recipe = await createRecipe(responseId, recipeChosenIndex);
         res.json(recipe);

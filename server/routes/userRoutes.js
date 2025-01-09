@@ -5,8 +5,11 @@ import {deleteUserPermanent, deleteUserQuick, softDeleteUser} from "../service/a
 const router = Router();
 
 router.post("/API/users", async (req, res) => {
+    const { email, password, name } = req.body;
+    if (!email || !password || !name) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
     try {
-        const { email, password, name } = req.body;
         const user = createUser(email, password, name);
         res.status(200).json({ status: 'success', data: user });
 
@@ -51,15 +54,21 @@ router.get('/API/users/email', async (req, res) => {
 });
 
 router.post('/API/users/:id', async (req, res) => {
-       try {
-        const { id } = req.params;
-        const { name, email, password } = req.body;
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ message: 'Missing id in params' });
+    }
+    const { name, email, password } = req.body;
+    if (!email || !password || !name) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+    try {
         const user = await updateUser(id, name, email, password);
         res.status(200).json({ status: 'success', data: user });
-      } catch (error) {
+    } catch (error) {
         console.error("Error processing the request:", error);
         res.status(500).json({ error: "Failed to update user" });
-      }
+    }
 });
 
 router.put("/API/users/softDelete", softDeleteUser);
