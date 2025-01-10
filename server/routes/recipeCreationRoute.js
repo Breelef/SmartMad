@@ -19,6 +19,7 @@ router.post("/firstUserPrompt", authenticateToken, async (req, res) => {
         const savedPromptId = await createPrompt(user.id, data);
         const response = await generateRecipe(data);
         const savedAiResponse = await createAiResponseFromPrompt(savedPromptId, response);
+        console.log(savedAiResponse.response);
         const jsonRecipes = JSON.parse(savedAiResponse.response);
         const AIResponseAndRecipesInJSON = {savedAiResponse, jsonRecipes}
         res.status(200).json({ status: 'success', data: AIResponseAndRecipesInJSON });
@@ -45,16 +46,23 @@ router.post("/generateRecipeResponse", async (req, res) => {
     }
 });
 
-router.post("/recipeChosen", async (req, res) => {
-    try{
-        console.log(req.body);
-        const { responseId, recipeChosenIndex } = req.body;
-        const recipe = await createRecipe(responseId, recipeChosenIndex);
-        res.json(recipe);
-    }catch (e){
-        console.error("Error creating recipe:", e);
-        res.status(500).json({ error: "Failed to create recipe"});
-    }
+router.post("/recipeChosen", authenticateToken, async (req, res) => {
+  const { aiResponseId, selectedRecipeData } = req.body;
+
+  if (!aiResponseId || !selectedRecipeData) {
+    return res.status(400).json({ error: "Missing required fields: aiResponseId or selectedRecipeData" });
+  }
+
+  try {
+    const newRecipe = await createRecipe(aiResponseId, selectedRecipeData);
+    res.status(201).json({
+      message: "Recipe created successfully",
+      recipe: newRecipe,
+    });
+  } catch (error) {
+    console.error("Error creating recipe:", error);
+    res.status(500).json({ error: "Failed to create recipe" });
+  }
 });
 
 router.get("/getToken", authenticateToken, (req, res) => {

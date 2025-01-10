@@ -7,10 +7,7 @@ export const FindOpskriftPage = () => {
 
   const routerLocation = useLocation();
   const { data } = routerLocation.state || {};
-  console.log("data", data);
   const recipes = data.data.jsonRecipes.recipes;
-  console.log(recipes);
-  console.log(recipes[0].name);
 
   const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
 
@@ -23,13 +20,13 @@ export const FindOpskriftPage = () => {
   const handleRecipeChoice = async (selectedRecipeData) => {
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await fetch('/recipeChosen', {
+      const response = await fetch('http://localhost:8080/recipeChosen', {
         method: 'POST',
         headers: {
           "Authorization": `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(selectedRecipeData),  // Send the selected recipe data
+        body: JSON.stringify(selectedRecipeData), 
       });
 
       if (!response.ok) {

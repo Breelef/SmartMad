@@ -51,7 +51,9 @@ Your response should be in 1 JSON file and in danish language and follow this sc
 ${JSON.stringify(outputStructure, null, 2)}
 
 Fill in all fields with appropriate content. Be creative with the recipe name, ingredients, and instructions while staying true to the user's input and preferences. Ensure that your response is a valid JSON object and you give the right types in the JSON. If you need a string to represent a number value then just put 0.
-If the measurements is in fractions then convert them to decimals, If the recipe includes any kind of meat that needs preparation, also add the process of preparing it as a part of the preparation steps.`;
+If the measurements is in fractions then convert them to decimals, If the recipe includes any kind of meat that needs preparation, also add the process of preparing it as a part of the preparation steps. 
+If you cannot make a valid recipe with the ingredients provided then send back a message saying: Cannot make recipes with those ingredients. 
+Similarly if a user provides no inputs, you can freestyle what to make for the user`;
 
   try {
     const result = await model.generateContent(prompt);
