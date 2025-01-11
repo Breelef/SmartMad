@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import{ ChooseSelf } from "./vælg_selv.js";
-import { ClearOut } from "./ryd_ud.js";
 import { LogoutButton } from "../components/logout_knap.js";
 import {SelectedOptionsBox} from "../components/valgte_muligheder.js";
 import {DropdownWithSearch} from "../components/dropdown_med_søg.js";

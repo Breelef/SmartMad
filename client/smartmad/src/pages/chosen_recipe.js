@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export const ChosenRecipePage = () => {
     const location = useLocation();
@@ -12,6 +12,8 @@ export const ChosenRecipePage = () => {
     const videoUrl = "https://www.youtube.com/embed/mhDJNfV7hjk";
     const toggleVideo = () => setShowVideo(!showVideo);
 
+    const messagesEndRef = useRef(null); // Ref to the last message element
+
     const handleMessageSubmit = (e) => {
         e.preventDefault();
 
@@ -19,7 +21,6 @@ export const ChosenRecipePage = () => {
             ...prevMessages,
             { sender: 'user', text: userMessage },
         ]);
-
 
         const data = {
             userMessage: userMessage,
@@ -51,7 +52,6 @@ export const ChosenRecipePage = () => {
                     ...prevMessages,
                     { sender: 'bot', text: responseData.answer },
                 ]);
-
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -61,10 +61,17 @@ export const ChosenRecipePage = () => {
         setUserMessage('');
     };
 
+    // Scroll to the bottom of the chat when messages change
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]); // Trigger scroll when messages array changes
+
     return (
         <div className="bg-gradient-to-b from-blue-800 to-blue-900 min-h-screen flex p-6 text-white">
             {/* Main Content */}
-            <div className="flex-1 pr-8">
+            <div className="flex-2 pr-8">
                 {/* Back Button */}
                 <div className="mb-4">
                     <button
@@ -139,10 +146,10 @@ export const ChosenRecipePage = () => {
                 </div>
             </div>
 
-            {/* Chatbox Section */}
-            <div className="w-80 sticky top-6 self-start ml-8">
-                <div className="bg-white p-6 rounded-lg shadow-lg h-full max-h-[500px] flex flex-col">
-                    <div className="flex-1 overflow-auto space-y-4 mb-4">
+            <div className="fixed bottom-0 right-1 w-[35rem] mb-1">
+                <div className="bg-white p-6 rounded-lg shadow-lg h-[calc(95vh)] flex flex-col overflow-hidden">
+                    {/* Chatbox messages container */}
+                    <div className="flex-1 overflow-auto space-y-4 mb-4 scrollbar-thin scrollbar-thumb-gray-400">
                         {messages.map((message, index) => (
                             <div
                                 key={index}
@@ -151,8 +158,11 @@ export const ChosenRecipePage = () => {
                                 <p>{message.text}</p>
                             </div>
                         ))}
+                        {/* Scroll trigger */}
+                        <div ref={messagesEndRef} />
                     </div>
 
+                    {/* Input Form */}
                     <form onSubmit={handleMessageSubmit} className="flex gap-2">
                         <input
                             type="text"
@@ -170,6 +180,7 @@ export const ChosenRecipePage = () => {
                     </form>
                 </div>
             </div>
+
         </div>
     );
 };

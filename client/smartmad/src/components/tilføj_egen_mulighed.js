@@ -10,6 +10,13 @@ export const AddCustomOption = ({ onAdd }) => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    // Check if the "Enter" key was pressed (keyCode 13)
+    if (e.key === 'Enter') {
+      handleAdd();
+    }
+  };
+
   return (
     <div className="flex mb-4">
       <input
@@ -17,6 +24,7 @@ export const AddCustomOption = ({ onAdd }) => {
         placeholder="Tilføj din egen mulighed"
         value={customOption}
         onChange={(e) => setCustomOption(e.target.value)}
+        onKeyDown={handleKeyDown} // Trigger handleAdd on "Enter"
         className="w-full px-3 py-2 border rounded-md text-black"
       />
       <button
