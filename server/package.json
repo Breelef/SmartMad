@@ -9,13 +9,12 @@
     "test": "jest",
     "migrate:dev": "npx prisma migrate dev && npx prisma generate",
     "migrate:prod": "npx prisma migrate deploy && npx prisma generate",
-    "seed": "node seeders/mysqlseeder.js && node database/storedFunctions.js && node mongoDB/seed.js && node neo4j/seed.js",
+    "seed": "node seeders/mysqlseeder.js && node database/storedFunctions.js",
     "reset": "npm run resetdb && npm run migrate:dev && npm run seed",
     "resetdb": "node database/deletedb.js && node database/createdb.js",
     "initdb": "npm run migrate:dev && npm run seed",
     "migrate": "node database/createdb.js && npm run migrate:prod && node database/grantPrivileges.js",
-    "alldb": "node database/deletedb.js && npm run migrate:dev",
-    "seedmongoandneo": "node mongoDB/seed.js && node neo4j/seed.js"
+    "alldb": "node database/deletedb.js && npm run migrate:dev"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +29,7 @@
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "ioredis": "^5.4.1",
+    "jest-mock-extended": "^4.0.0-beta1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.2",
     "mysql2": "^3.11.4",

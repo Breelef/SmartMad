@@ -201,4 +201,5 @@ export default {
   testEnvironment: 'node',
   clearMocks: true,
   transform: {'^.+\\.js$': 'babel-jest',},
+  setupFilesAfterEnv: ['<rootDir>/prisma/singleton.js'],
 };

@@ -4,9 +4,12 @@ import {extractAuthToken, verifyToken} from "../auth/authHelpers.js";
 const prisma = new PrismaClient();
 
 export async function findUserByEmail(email) {
-    return prisma.user.findFirst({
+    console.log(email);
+  const user = await prisma.user.findFirst({
     where: { email: email },
   });
+  console.log(user); // Log the result
+  return user;
 }
 
 export async function findUserById(id) {
