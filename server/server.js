@@ -12,7 +12,6 @@ import mongoRouter from "./mongoDB/mongoApp.js";
 import sqlCrudRouter from "./routes/sqlCrudRouter.js";
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
-import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
