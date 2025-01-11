@@ -15,7 +15,6 @@ Cypress.Commands.add('login', (email, password) => {
     cy.get('input[name="password"]').type(password);
     cy.get('form').submit();
   
-    // Optionally, you can check for some post-login state or response
     cy.url().should('include', '/udfyld-til-opskrift');
   });
   
