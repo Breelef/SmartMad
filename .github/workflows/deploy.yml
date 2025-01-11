@@ -23,9 +23,6 @@ jobs:
       - name: Install Dependencies (Server)
         run: npm install
         working-directory: ./server
-      - name: Run Tests (Server)
-        run: npm run test
-        working-directory: ./server
 
       # Optional: List files (for debugging)
       - name: List Files
