@@ -47,15 +47,15 @@ const graphService = {
     return await createNode('Ingredient', { name });
   },
 
-  getRecipeByName: async (name) => {
+  getRecipeById: async (id) => {
     const query = `
       MATCH (r:Recipe)-[:HAS_INGREDIENT]->(i:Ingredient)
-      WHERE r.name = $name
+      WHERE ID(r) = $id
       RETURN r, collect(i.name) AS ingredients
     `;
-    const [result] = await executeQuery(query, { name });
+    const [result] = await executeQuery(query, { id: parseInt(id, 10) });
     if (!result) return null;
-  
+
     return {
       recipe: result.r.properties,
       ingredients: result.ingredients,

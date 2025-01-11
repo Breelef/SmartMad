@@ -9,6 +9,9 @@ const prisma = new PrismaClient();
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
     try {
         const user = await findUserByEmail(email);
         if (!user) {
@@ -69,6 +72,9 @@ export const refreshToken = async (req, res) => {
 
 export const signup = async (req, res) => {
     const { email, password, name } = req.body;
+    if (!email || !password || !name) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
     try {
         const existingUser = await findUserByEmail(email);
         if(existingUser){
@@ -88,15 +94,9 @@ export const logout = async (req, res) => {
     return res.status(401).send("Authentication token is required");
   }
 
-  if(!verify(req)){
-      return res.status(401).send("Authentication token is not valid");
-  }
-
   try {
     const { exp } = decodeToken(token);
     const ttl = exp ? Math.max(exp - Math.floor(Date.now() / 1000), 0) : 3600;
-
-
     await redisSet(`blacklisted:${token}`, 'revoked', ttl);
     res.status(200).send("Logged out successfully");
   } catch (error) {
@@ -181,9 +181,10 @@ export const deleteUserPermanent = async (req, res) => {
 };
 
 export const deleteUserQuick = async (req, res) => {
+    const email = req.body;
     try{
         const user = await prisma.user.findUnique({
-            where: { email: "examtest@user.com" },
+            where: email,
         });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
