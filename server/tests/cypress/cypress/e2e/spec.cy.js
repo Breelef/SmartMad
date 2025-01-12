@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3000";
+const baseUrl = "http://localhost:8080";
 
 //cy.get('#txtNumberPersons') //For ID
 //cy.get('input[value="xxx"]') //For some input value, for instance: name="xxx" or placeholder="xxx"
