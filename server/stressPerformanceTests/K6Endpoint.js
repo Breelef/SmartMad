@@ -10,7 +10,7 @@ export const options = {
     ],
 };
 
-const baseURL = `http://192.168.1.6:8080`; //Ændre til egen IP!
+const baseURL = `http://192.168.1.124:8080`; //Ændre til egen IP!
 
 export function setup() {
     // No "Quick" cleanup needed, we just proceed with the test
