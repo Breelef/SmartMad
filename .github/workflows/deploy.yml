@@ -51,25 +51,8 @@ jobs:
           nohup npm run start > backend.log 2>&1 &
         working-directory: ./server
 
-      # Step 5: Check if Backend Log Exists
-      - name: Check for Backend Log
-        run: |
-          if [ ! -f "./server/backend.log" ]; then
-            echo "Error: Backend log not created"
-            exit 1
-          fi
 
-      # Step 6: Output Backend Logs
-      - name: Output Backend Logs
-        run: |
-          cat ./server/backend.log
-
-      # Step 7: Wait for the backend server to be ready
-      - name: Wait for Backend Server to Start
-        run: |
-          npx wait-on http://localhost:8080
-
-      # Step 8: Run Cypress tests
+      # Step 5: Run Cypress tests
       - name: Run Cypress Tests
         run: |
           npx cypress run --headless --browser chrome --spec './server/tests/cypress/cypress/e2e/spec.cy.js'
