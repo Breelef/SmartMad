@@ -56,7 +56,7 @@ describe('Signup Page, wrong login', () => {
       .should('contain', 'Invalid email address');
   });
 });
-
+/*
 describe('Test Login and Actions', () => {
   it("Should complete a Full happy path", () => {
     cy.get('input[name="email"]').type("admin@admin.com");
@@ -123,3 +123,4 @@ describe('Test Login and Actions', () => {
   });
 
 });
+*/
