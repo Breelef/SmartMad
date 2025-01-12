@@ -26,6 +26,12 @@ jobs:
       GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
       GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
       GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: --health-cmd "redis-server --test-memory 100" --health-timeout 3s --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -36,18 +42,23 @@ jobs:
           npm install cypress --save-dev
         working-directory: ./server
 
-      # Step 2: Start backend server in the background
+      # Step 2: Wait for Redis to be ready
+      - name: Wait for Redis to Start
+        run: |
+          npx wait-on redis://localhost:6379
+          
+      # Step 3: Start backend server in the background
       - name: Start Backend Server
         run: |
-          nohup npm run start
+          nohup npm run start &
         working-directory: ./server
 
-      # Step 3: Wait for the backend server to be ready
+      # Step 4: Wait for the backend server to be ready
       - name: Wait for Backend Server to Start
         run: |
           npx wait-on http://localhost:3000 
           
-      # Step 4: Run Cypress tests
+      # Step 5: Run Cypress tests
       - name: Run Cypress Tests
         run: |
           npx cypress run --headless --browser chrome --spec './server/tests/cypress/cypress/e2e/spec.cy.js'
