@@ -17,6 +17,27 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  cypress:
+    name: Cypress Tests
+    runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          npm install
+          npm install cypress --save-dev
+        working-directory: ./server
+
+      - name: Run Cypress Tests
+        run: |
+          npx cypress run --headless --browser chrome --spec './server/tests/cypress/cypress/e2e/spec.cy.js'
+        working-directory: ./server
+
+
   deploy:
     runs-on: ubuntu-latest
     steps:
