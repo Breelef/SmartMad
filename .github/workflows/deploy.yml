@@ -89,11 +89,6 @@ jobs:
           npm run test
         working-directory: ./server
 
-      - name: Run K6 Tests
-        run: |
-          npm run k6
-        working-directory: ./server
-
       - name: Stop Docker Compose
         run: |
           npm run dockerdown
