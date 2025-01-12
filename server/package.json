@@ -15,7 +15,8 @@
     "resetdb": "node database/deletedb.js && node database/createdb.js",
     "initdb": "npm run migrate:dev && npm run seed",
     "migrate": "node database/createdb.js && npm run migrate:prod && node database/grantPrivileges.js",
-    "alldb": "node database/deletedb.js && npm run migrate:dev"
+    "alldb": "node database/deletedb.js && npm run migrate:dev",
+    "k6": "docker run -i grafana/k6 run - < K6Endpoint.test.js > k6_test_results.txt"
   },
   "keywords": [],
   "author": "",
