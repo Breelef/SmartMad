@@ -51,7 +51,7 @@ jobs:
 
       - name: Start Docker Compose and Wait
         run: |
-          npm run docker
+          npm run docker &
           npx wait-on tcp:${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}
           npx wait-on tcp:localhost:6379
           sleep 10
@@ -59,7 +59,7 @@ jobs:
 
       - name: Seed database
         run: |
-          npm run seed
+          npm run initdb
         working-directory: ./server
 
       - name: Wait for Redis to Be Available
