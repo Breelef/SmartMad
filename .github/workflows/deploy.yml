@@ -57,7 +57,7 @@ jobs:
 
       - name: Output Backend Logs
         run: |
-          cat backend.log
+          cat nohup.out
 
       # Step 4: Wait for the backend server to be ready
       - name: Wait for Backend Server to Start
