@@ -77,13 +77,12 @@ jobs:
           npx wait-on tcp:localhost:8080
           npx wait-on tcp:localhost:3000
 
-      # Step 6: Run Cypress tests
       - name: Run Cypress Tests
         run: |
           npx cypress run --browser chrome --spec './cypress/e2e/spec.cy.js'
+          sleep 10
         working-directory: ./server/tests/cypress
 
-      # Step 7: Stop Docker Compose
       - name: Stop Docker Compose
         run: |
           npm run docker down
