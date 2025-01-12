@@ -18,7 +18,7 @@
     "initdb": "npm run migrate:dev && npm run seed",
     "migrate": "node database/createdb.js && npm run migrate:prod && node database/grantPrivileges.js",
     "alldb": "node database/deletedb.js && npm run migrate:dev",
-    "test:db:setup": "mysql -h localhost -P 3307 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS smartrecipe_test;'",
+    "test:db:setup": "mysql -h localhost -P 3307 -u root -p password -e 'CREATE DATABASE IF NOT EXISTS smartrecipe_test;'",
     "test:migrate": "dotenv -e .env.test -- prisma migrate deploy",
     "test:int": "dotenv -e .env.test -- npm test"
   },

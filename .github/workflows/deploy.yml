@@ -97,7 +97,7 @@ jobs:
 
       - name: Run Jest Tests
         run: |
-          npm run test:db:setup
+          mysql -h localhost -P 3307 -u ${{ secrets.DB_USERNAME }} -p ${{ secrets.DB_PASSWORD }} -e 'CREATE DATABASE IF NOT EXISTS smartrecipe_test;'
           npm run test:migrate
           npm run test:int
         working-directory: ./server
