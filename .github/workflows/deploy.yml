@@ -1,59 +1,85 @@
-name: CI/CD with Oracle Cloud
+  name: CI/CD with Oracle Cloud
 
-on:
-  push:
-    branches:
-      - main
+  on:
+    push:
+      branches:
+        - main
 
-jobs:
-  cypress:
-    name: Cypress Tests
-    runs-on: ubuntu-latest
-    env:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
-    services:
-      redis:
-        image: redis:latest
-        ports:
-          - 6379:6379
-        options: --health-cmd "redis-cli -h 127.0.0.1 -p 6379 ping | grep PONG" --health-interval 5s --health-timeout 3s --health-retries 10
-    steps:
-      - uses: actions/checkout@v4
+  jobs:
+    sonarqube:
+      name: SonarQube
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+        - name: SonarQube Scan
+          uses: SonarSource/sonarqube-scan-action@v4
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      # Step 1: Ensure server directory exists
-      - name: Ensure Server Directory
-        run: |
-          if [ ! -d "./server" ]; then
-            echo "Error: ./server directory does not exist"
-            exit 1
-          fi
+    cypress:
+      name: Cypress Tests
+      runs-on: ubuntu-latest
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
+        REDIS_HOST: ${{ secrets.REDIS_HOST }}
+        REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      services:
+        redis:
+          image: redis:latest
+          ports:
+            - 6379:6379
+          options: --health-cmd "redis-cli -h 127.0.0.1 -p 6379 ping | grep PONG" --health-interval 5s --health-timeout 3s --health-retries 10
+      steps:
+        - uses: actions/checkout@v4
 
-      # Step 2: Install backend dependencies
-      - name: Install Dependencies (Backend)
-        run: |
-          npm install
-          npm install cypress --save-dev
-        working-directory: ./server
+        # Step 1: Install backend dependencies
+        - name: Install Dependencies (Backend)
+          run: |
+            npm install
+            npm install cypress --save-dev
+          working-directory: ./server
 
-      # Step 3: Wait for Redis to be ready
-      - name: Wait for Redis to Start
-        run: |
-          npx wait-on tcp:localhost:6379
+        # Step 2: Wait for Redis to be ready
+        - name: Wait for Redis to Start
+          run: |
+            npx wait-on tcp:localhost:6379
+            
+        # Step 3: Start backend server in the background
+        - name: Start Backend Server
+          run: |
+            nohup npm run start > backend.log 2>&1 &
+          working-directory: ./server
 
-      # Step 4: Start backend server in the background
-      - name: Start Backend Server
-        run: |
-          nohup npm run start > backend.log 2>&1 &
-        working-directory: ./server
+        # Step 5: Run Cypress tests
+        - name: Run Cypress Tests
+          run: |
+            npx cypress run --headless --browser chrome --spec './cypress/e2e/spec.cy.js'
+          working-directory: ./server/tests/cypress
 
+    deploy:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
 
-      # Step 5: Run Cypress tests
-      - name: Run Cypress Tests
-        run: |
-          npx cypress run --headless --browser chrome --spec './server/tests/cypress/cypress/e2e/spec.cy.js'
-        working-directory: .cypress
+        # Client-side build steps
+        - name: Install Dependencies (Client)
+          run: npm install
+          working-directory: ./client/smartmad
+        - name: Build Application (Client)
+          run: npm run build
+          working-directory: ./client/smartmad
+
+        # Server-side test steps
+        - name: Install Dependencies (Server)
+          run: npm install
+          working-directory: ./server
+
+        # Optional: List files (for debugging)
+        - name: List Files
+          run: ls -R
+          working-directory: ./client/smartmad
