@@ -53,7 +53,7 @@ jobs:
       - name: Start Backend Server
         run: |
           nohup npm run start > backend.log 2>&1 &
-          working-directory: ./server
+        working-directory: ./server
 
       - name: Output Backend Logs
         run: |
