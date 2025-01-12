@@ -8,15 +8,6 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-const baseUrl = "http://localhost:3000";
-Cypress.Commands.add('login', (email, password) => {
-    cy.visit(baseUrl + '/login');
-    cy.get('input[name="email"]').type(email);
-    cy.get('input[name="password"]').type(password);
-    cy.get('form').submit();
-  
-    cy.url().should('include', '/udfyld-til-opskrift');
-  });
   
 //
 // -- This is a parent command --

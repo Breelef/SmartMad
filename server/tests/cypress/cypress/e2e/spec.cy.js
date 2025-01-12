@@ -58,9 +58,12 @@ describe('Signup Page, wrong login', () => {
 
 describe('Test Login and Actions', () => {
   it("Should complete a Full happy path", () => {
-    cy.session('admin-session', () => {
-      cy.login('admin@admin.com', 'admin123');
-    });
+    cy.visit(baseUrl + '/login');
+    cy.get('input[name="email"]').type("admin@admin.com");
+    cy.get('input[name="password"]').type("admin123");
+    cy.get('form').submit();
+    cy.wait(1000);
+    cy.url().should('include', '/udfyld-til-opskrift');
 
     cy.visit(baseUrl + "/udfyld-til-opskrift");
     cy.wait(1000);
