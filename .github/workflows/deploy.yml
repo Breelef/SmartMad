@@ -52,8 +52,12 @@ jobs:
       # Step 3: Start backend server in the background
       - name: Start Backend Server
         run: |
-          nohup npm run start &
-        working-directory: ./server
+          nohup npm run start > backend.log 2>&1 &
+          working-directory: ./server
+
+      - name: Output Backend Logs
+        run: |
+          cat backend.log
 
       # Step 4: Wait for the backend server to be ready
       - name: Wait for Backend Server to Start
