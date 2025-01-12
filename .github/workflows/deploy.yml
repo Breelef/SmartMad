@@ -54,7 +54,7 @@ jobs:
       # Step 3: Start Docker Compose for services (if any)
       - name: Start Docker Compose
         run: |
-          docker-compose up
+          npm run docker
         working-directory: ./server
 
       # Step 4: Wait for Redis to be ready
@@ -100,7 +100,7 @@ jobs:
       # Start Docker Compose for server if needed
       - name: Start Docker Compose for Server
         run: |
-          docker-compose up
+          npm run docker
         working-directory: ./server
 
       # Optional: List files (for debugging)
