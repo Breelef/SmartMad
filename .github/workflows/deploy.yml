@@ -52,11 +52,7 @@ jobs:
       - name: Start Docker Compose
         run: |
           npm run docker &
-        working-directory: ./server
-
-      - name: Wait for Database to Be Available
-        run: |
-          npx wait-on tcp:${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}  # Wait for the database to be ready
+          npx wait-on tcp:${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}
         working-directory: ./server
 
       - name: Seed database

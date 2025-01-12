@@ -8,6 +8,9 @@ services:
       MYSQL_DATABASE: smartrecipe
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+      MYSQL_TCP_TIMEOUT: 10000
+      MYSQL_WAIT_TIMEOUT: 10000
+      MYSQL_INTERACTIVE_TIMEOUT: 10000
     ports:
       - "3306:3306"
       - "3307:3306"
