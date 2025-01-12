@@ -38,21 +38,42 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Dependencies (Backend)
-        run: |
-          npm install
-          npm install cypress --save-dev
-        working-directory: ./server
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
 
-      - name: Install and Start Frontend
-        run: |
-          npm install
-          npm run start & 
+      - name: Install dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Install frontend dependencies
         working-directory: ./client/smartmad
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ./client/smartmad
+        run: npm run build
+
+      - name: Start backend in background
+        working-directory: ./server
+        run: |
+          nohup npm run start &  
+          sleep 10 
+
+      - name: Wait for backend to be ready
+        run: |
+          timeout 60 sh -c 'until curl -s http://localhost:8080/health; do sleep 5; done'
+
+      - name: Start frontend in background
+        working-directory: ./client/smartmad
+        run: |
+          nohup npm start &
+          sleep 10
 
       - name: Start Docker Compose and Wait
         run: |
-          npm run docker &
+          docker compose up &
           npx wait-on tcp:${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}
           npx wait-on tcp:localhost:6379
           sleep 10
@@ -68,16 +89,6 @@ jobs:
           npx wait-on tcp:localhost:6379
         working-directory: ./server
 
-      - name: Start Backend Server
-        run: |
-          nohup npm run start & 
-        working-directory: ./server
-
-      - name: Wait for Backend and Frontend
-        run: |
-          npx wait-on tcp:localhost:8080
-          npx wait-on tcp:localhost:3000
-
       - name: Run Cypress Tests
         run: |
           npx cypress run --browser chrome --spec './cypress/e2e/spec.cy.js'
@@ -86,44 +97,18 @@ jobs:
 
       - name: Run Jest Tests
         run: |
-          npm run test
+          npm run db:test:setup
+          npm run test:migrate
+          npm run test:int
         working-directory: ./server
 
-      - name: Run K6 Tests
+      - name: Run Postman tests
+        working-directory: ./server
         run: |
-          npm run k6
-        working-directory: ./server
+          cd PostmanTest
+          newman run API_test.postman_collection.json -e TestingManda.postman_environment.json
 
-      - name: Stop Docker Compose
+      - name: Stop Docker
         run: |
-          npm run dockerdown
+          docker compose down
         working-directory: ./server
-
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      # Client-side build steps
-      - name: Install Dependencies (Client)
-        run: npm install
-        working-directory: ./client/smartmad
-      - name: Build Application (Client)
-        run: npm run build
-        working-directory: ./client/smartmad
-
-      # Server-side test steps
-      - name: Install Dependencies (Server)
-        run: npm install
-        working-directory: ./server
-
-      # Start Docker Compose for server if needed
-      - name: Start Docker Compose for Server
-        run: |
-          npm run docker &
-        working-directory: ./server
-
-      # Optional: List files (for debugging)
-      - name: List Files
-        run: ls -R
-        working-directory: ./client/smartmad
