@@ -44,9 +44,11 @@ describe('Signup Page, wrong login', () => {
 
   it('should show an error message for invalid email format', () => {
     cy.visit(baseUrl + '/login');
+    
+  
     cy.get('input[name="email"]')
       .type('invalid-email')
-      .blur();
+      .blur(); 
 
     cy.get('input[name="email"]')
       .parent()
@@ -61,8 +63,8 @@ describe('Test Login and Actions', () => {
     });
 
     cy.visit(baseUrl + "/udfyld-til-opskrift");
-
-    cy.url({ timeout: 30000 }).should('include', '/udfyld-til-opskrift');
+    cy.wait(1000);
+    cy.url().should('include', '/udfyld-til-opskrift');
 
     cy.get('input[placeholder="Tilføj din egen mulighed"]')
       .type('tomato')
@@ -82,7 +84,8 @@ describe('Test Login and Actions', () => {
       .contains('Send Opskrift')
       .should('be.visible')
       .should('not.be.disabled')
-      .click({ force: true });
+      .click({ force: true })
+      .click();
 
     cy.wait(1000);
 
@@ -101,6 +104,7 @@ describe('Test Login and Actions', () => {
     cy.get('input[placeholder="Spørg kokken!"]')
       .should('be.visible')
       .type('Hej, jeg vil gerne have hjælp med den her opskrift!');
+
 
     cy.get('button[type="submit"]')
       .contains('Send')
