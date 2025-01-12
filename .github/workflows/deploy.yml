@@ -97,10 +97,23 @@ jobs:
 
       - name: Run Jest Tests
         run: |
-          mysql -h 127.0.0.1 -P 3307 -u ${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} -e 'CREATE DATABASE IF NOT EXISTS smartrecipe_test;'
-          npm run test:migrate
+          mysql -h 127.0.0.1 --protocol=TCP -P 3307 -u ${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} -e 'CREATE DATABASE IF NOT EXISTS smartrecipe_test;'
+
+          # Debug: Print the current DATABASE_URL
+          echo "Current DATABASE_URL in .env.test:"
+          grep DATABASE_URL .env.test
+
+          # Run migrations explicitly specifying the database URL
+          DATABASE_URL="mysql://${{ secrets.DB_USERNAME }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:3307/smartrecipe_test" npx prisma migrate deploy
+
+          # Verify tables were created
+          mysql -h 127.0.0.1 --protocol=TCP -P 3307 -u ${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} smartrecipe_test -e 'SHOW TABLES;'
+
+          # Run tests
           npm run test:int
         working-directory: ./server
+        env:
+          DATABASE_URL: mysql://${{ secrets.DB_USERNAME }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:3307/smartrecipe_test
 
       - name: Run Postman tests
         working-directory: ./server
