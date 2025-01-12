@@ -16,34 +16,6 @@ services:
     networks:
       - app_network
 
-  mongodb:
-    build:
-      context: ./mongoDB
-      dockerfile: Dockerfile-mongo
-    container_name: mongodb_container
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - app_network
-
-  neo4j:
-    image: neo4j:latest
-    container_name: neo4j_container
-    restart: always
-    environment:
-      NEO4J_AUTH: neo4j/password
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-    volumes:
-      - neo4j_data:/data
-      - neo4j_logs:/logs
-      - neo4j_import:/var/lib/neo4j/import
-    networks:
-      - app_network
 
   redis:
     image: redis:latest
@@ -55,10 +27,6 @@ services:
 
 volumes:
   mysql_data:
-  mongodb_data:
-  neo4j_data:
-  neo4j_logs:
-  neo4j_import:
 
 networks:
   app_network:
