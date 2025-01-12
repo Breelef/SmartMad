@@ -44,6 +44,12 @@
             npm install cypress --save-dev
           working-directory: ./server
 
+        - name: Install and Start Frontend
+          run: |
+            npm install
+            npm run start &
+          working-directory: ./client/smartmad
+
         # Step 2: Wait for Redis to be ready
         - name: Wait for Redis to Start
           run: |
@@ -54,6 +60,11 @@
           run: |
             nohup npm run start &
           working-directory: ./server
+
+        - name: Wait for Backend and Frontend
+          run: |
+            npx wait-on tcp:localhost:8080
+            npx wait-on tcp:localhost:3000
 
         # Step 5: Run Cypress tests
         - name: Run Cypress Tests

@@ -8,7 +8,7 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-const baseUrl = "http://localhost:8080";
+const baseUrl = "http://localhost:3000";
 Cypress.Commands.add('login', (email, password) => {
     cy.visit(baseUrl + '/login');
     cy.get('input[name="email"]').type(email);
