@@ -28,41 +28,27 @@ jobs:
       GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
       REDIS_HOST: ${{ secrets.REDIS_HOST }}
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
-    services:
-      redis:
-        image: redis:latest
-        ports:
-          - 6379:6379
-        options: --health-cmd "redis-cli -h 127.0.0.1 -p 6379 ping | grep PONG" --health-interval 5s --health-timeout 3s --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
-      # Step 1: Install backend dependencies
       - name: Install Dependencies (Backend)
         run: |
           npm install
           npm install cypress --save-dev
         working-directory: ./server
 
-      # Step 2: Install and Start Frontend
       - name: Install and Start Frontend
         run: |
           npm install
           npm run start & 
         working-directory: ./client/smartmad
 
-      # Step 3: Start Docker Compose for services (if any)
+
       - name: Start Docker Compose
         run: |
           npm run docker
         working-directory: ./server
 
-      # Step 4: Wait for Redis to be ready
-      - name: Wait for Redis to Start
-        run: |
-          npx wait-on tcp:localhost:6379
-
-      # Step 5: Start backend server in the background
       - name: Start Backend Server
         run: |
           nohup npm run start & 
@@ -95,6 +81,12 @@ jobs:
       # Server-side test steps
       - name: Install Dependencies (Server)
         run: npm install
+        working-directory: ./server
+
+      # Start Docker Compose for server if needed
+      - name: Start Docker Compose for Server
+        run: |
+          npm run docker
         working-directory: ./server
 
       # Optional: List files (for debugging)
