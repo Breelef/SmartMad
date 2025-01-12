@@ -54,6 +54,11 @@ jobs:
           npm run docker &
         working-directory: ./server
 
+      - name: Wait for Database to Be Available
+        run: |
+          npx wait-on tcp:${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}  # Wait for the database to be ready
+        working-directory: ./server
+
       - name: Seed database
         run: |
           npm run seed
