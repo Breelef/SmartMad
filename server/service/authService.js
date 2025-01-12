@@ -145,7 +145,7 @@ export const softDeleteUser = async (req, res) => {
     try{
         const user = await findUserById(userId);
         if (!user) {
-          return res.status(404).json({ error: 'User not found' });
+          return res.status(404).json({ error: 'User not found softDeleteUser' });
         }
         if (await comparePasswords(password, user.password)) {
           const result = await softDeleteUserById(user.id);
@@ -165,7 +165,7 @@ export const deleteUserPermanent = async (req, res) => {
     try{
         const user = await findUserById(userId);
         if (!user) {
-          return res.status(404).json({ error: 'User not found' });
+          return res.status(404).json({ error: 'User not found deleteUserPermanent' });
         }
         if (await comparePasswords(password, user.password)) {
           const result = await deleteUserPermanently(user.id);
@@ -187,7 +187,7 @@ export const deleteUserQuick = async (req, res) => {
             where: email,
         });
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "User not found deleteUserQuick" });
         }
         await prisma.user.delete({
             where: { id: user.id },

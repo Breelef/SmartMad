@@ -35,12 +35,10 @@ describe('Signup Page, wrong login', () => {
 
   it('should show an error message when email is not entered', () => {
     cy.visit(baseUrl + '/login');
-    // Submit the form without entering an email
     cy.get('form').submit();
 
-    // Check for the "Email is required" error message
     cy.get('input[name="email"]')
-      .parent() // Parent to access the error message next to the input
+      .parent()
       .should('contain', 'Email is required');
   });
 

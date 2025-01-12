@@ -42,3 +42,5 @@ const PORT = 8080;
 app.listen(PORT, () => {
    console.log("Server Running On: ", PORT);
 });
+
+export default app;

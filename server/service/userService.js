@@ -4,7 +4,7 @@ import {extractAuthToken, verifyToken} from "../auth/authHelpers.js";
 const prisma = new PrismaClient();
 
 export async function findUserByEmail(email) {
-    console.log(email);
+    console.log('Searching for user with email:', email);
   const user = await prisma.user.findFirst({
     where: { email: email },
   });
@@ -76,6 +76,29 @@ export async function softDeleteUserById(id){
         console.error('Error soft-deleting user:', error);
         throw error;
   }
+}
+
+export async function deleteUserByEmail(email) {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { email: email },
+        });
+
+        if (!user) {
+            console.log('User not found deleteByEmail');
+            return null; 
+        }
+
+        await prisma.user.delete({
+            where: { email: email },
+        });
+
+        console.log(`User with email ${email} deleted successfully`);
+        return true;
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        throw new Error('Failed to delete user');
+    }
 }
 
 export async function deleteUserPermanently(id){

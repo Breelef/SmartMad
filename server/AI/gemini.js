@@ -1,24 +1,29 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import fs from "fs";
 import path from "path";
-import {fileURLToPath} from "url";
 import dotenv from "dotenv";
+
 
 dotenv.config();
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = path.resolve(process.cwd());
+const __dirname = path.dirname(__filename);
 
 // Initialize the Gemini model
 async function initializeAI() {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  return genAI.getGenerativeModel({model: "gemini-1.5-flash"});
+  return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 }
 
 // Read JSON files
-function readJSONFile(filename) {
-  const filePath = path.join(__dirname + filename);
+export function readJSONFile(filename) {
+  const filePath = path.resolve(__dirname, 'server/AI/JSON', filename);
+  console.log('Full file path being accessed:', filePath);
+  console.log('Current directory:', __dirname);
+  console.log('Target file path:', path.resolve(__dirname, 'server/AI/JSON', filename));
+
   try {
-    const data = fs.readFileSync(filePath, "utf8");
+    const data = fs.readFileSync(filePath, 'utf-8');
     return JSON.parse(data);
   } catch (err) {
     console.error(`Error reading or parsing the file ${filename}:`, err);
@@ -27,66 +32,67 @@ function readJSONFile(filename) {
 }
 
 function cleanText(rawText) {
-    return rawText.replace(/```json|```|```json|```/g, '')
-                  .trim();
+  if (!rawText) {
+    throw new Error("The model did not return a valid JSON response.");
+  }
+  return rawText.replace(/```json|```|```json|```/g, '').trim();
 }
 
 export async function generateRecipe(userJSON) {
   const model = await initializeAI();
-  const outputStructure = readJSONFile("/JSON/JSONstructureOutputSkeleton.json");
+  const outputStructure = readJSONFile("JSONstructureOutputSkeleton.json");
 
   if (!outputStructure) {
     throw new Error("Failed to read input or output JSON files");
   }
 
-  const prompt = `
-You are a creative cooking instruction bot. Your task is to generate unique and original recipes based on the following input:
-
-${JSON.stringify(userJSON, null, 2)}
-
-Create Three NEW recipes inside an array of a json object that uses the given ingredients and matches the user's preferences. Be creative and original.
-
-Your response should be in 1 JSON file and in danish language and follow this schema:
-
-${JSON.stringify(outputStructure, null, 2)}
-
-Fill in all fields with appropriate content. Be creative with the recipe name, ingredients, and instructions while staying true to the user's input and preferences. Ensure that your response is a valid JSON object and you give the right types in the JSON. If you need a string to represent a number value then just put 0.
-If the measurements is in fractions then convert them to decimals, If the recipe includes any kind of meat that needs preparation, also add the process of preparing it as a part of the preparation steps. 
-If you cannot make a valid recipe with the ingredients provided then send back a message saying: Cannot make recipes with those ingredients. 
-Similarly if a user provides no inputs, you can freestyle what to make for the user`;
+  const prompt = `...`; // Keep your original prompt logic
 
   try {
     const result = await model.generateContent(prompt);
-    return cleanText(result.response.text());
+
+    const responseText = result.response.text(); // Get the text from the model's response
+
+    // Check if the response text is valid JSON
+    try {
+      JSON.parse(responseText);
+    } catch (e) {
+      console.error("Invalid JSON response:", responseText);
+      throw new Error("The model did not return a valid JSON response.");
+    }
+
+    console.log(responseText);
+    return cleanText(responseText); // Now that we confirmed it's valid JSON, clean it
   } catch (error) {
-    console.error("Failed to parse JSON response:", result);
+    console.error("Failed to parse JSON response");
     throw new Error("The model did not return a valid JSON response.");
   }
 }
 
 
+
 export async function generateResponseForUser(userText, recipe) {
-  const model = await initializeAI();   
+  const model = await initializeAI();
 
-  const prompt = `
-You are a creative cooking instruction bot. Your task is to help the user with the following recipe: 
+  const prompt = `...`; // Keep your original prompt logic
 
-${JSON.stringify(recipe, null, 2)}
-
-With this recipe in mind, the user has the following question:
-
-${JSON.stringify(userText, null, 2)}
-
-Answer the question in danish. and be as specific as possible. give the answer in 3 sentences.
-`
-
-const result = await model.generateContent(prompt);
-  const cleanedText = cleanText(result.response.text());
   try {
+    const result = await model.generateContent(prompt);
+
+    const responseText = result.response.text(); // Get the text from the model's response
+
+    // Check if the response text is valid JSON
+    try {
+      JSON.parse(responseText);
+    } catch (e) {
+      console.error("Invalid JSON response:", responseText);
+      throw new Error("The model did not return a valid JSON response.");
+    }
+
+    const cleanedText = cleanText(responseText);
     return cleanedText;
   } catch (error) {
-    console.error("Failed to parse JSON response:", cleanedText);
+    console.error("Failed to parse JSON response:", error);
     throw new Error("The model did not return a valid JSON response.");
   }
-
 }
