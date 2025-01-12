@@ -201,5 +201,5 @@ export default {
   testEnvironment: 'node',
   clearMocks: true,
   transform: {'^.+\\.js$': 'babel-jest',},
-  setupFilesAfterEnv: ['<rootDir>/prisma/singleton.js'],
+  setupFilesAfterEnv: process.env.TEST_TYPE === 'integration' ? ['<rootDir>/jest.setup.js'] : [],
 };

@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import { redisSet, redisGet, checkTokenBlacklist } from '../auth/redisOperations';
+import { redisSet, redisGet, checkTokenBlacklist } from '../../auth/redisOperations.js';
 
 jest.mock('ioredis', () => {
   const mRedis = {

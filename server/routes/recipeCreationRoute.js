@@ -50,7 +50,7 @@ router.post("/recipeChosen", authenticateToken, async (req, res) => {
   const { aiResponseId, selectedRecipeData } = req.body;
 
   if (!aiResponseId || !selectedRecipeData) {
-    return res.status(400).json({ error: "Missing required fields: aiResponseId or selectedRecipeData" });
+    return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {

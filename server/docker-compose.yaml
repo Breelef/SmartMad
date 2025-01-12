@@ -10,12 +10,12 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
+      - "3307:3306"
     volumes:
       - ./Server/database:/docker-entrypoint-initdb.d  # Populate MySQL with initial scripts
       - mysql_data:/var/lib/mysql
     networks:
       - app_network
-
   mongodb:
     build:
       context: ./mongoDB
