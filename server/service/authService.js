@@ -38,16 +38,19 @@ export const verify = async (req, res) => {
     if (!token) {
         return res.status(401).send("Authentication token is required");
     }
+
     if (await checkTokenBlacklist(token)) {
         return res.status(401).json({ valid: false, message: 'Token has been invalidated' });
     }
-    try{
-        const decoded = verifyToken(token, process.env.JWT_SECRET);
+
+    try {
+        const decoded = await verifyToken(token, process.env.JWT_SECRET);
         res.json({ valid: true, data: decoded });
-    }catch (error){
-        res.status(401).json({ valid: false, message: 'Invalid Token' })
+    } catch (error) {
+        console.error('Error verifying token:', error);
+        res.status(401).json({ valid: false, message: 'Invalid Token' });
     }
-}
+};
 
 export const refreshToken = async (req, res) => {
     const token = extractAuthToken(req);
@@ -90,20 +93,20 @@ export const signup = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-  const token = extractAuthToken(req);
-  if (!token) {
-    return res.status(401).send("Authentication token is required");
-  }
+ const token = extractAuthToken(req);
+ if (!token) {
+   return res.status(401).send("Authentication token is required");
+ }
 
-  try {
-    const { exp } = decodeToken(token);
-    const ttl = exp ? Math.max(exp - Math.floor(Date.now() / 1000), 0) : 3600;
-    await redisSet(`blacklisted:${token}`, 'revoked', ttl);
-    res.status(200).send("Logged out successfully");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal server error");
-  }
+ try {
+   const { exp } = decodeToken(token);
+   const ttl = exp ? Math.max(exp - Math.floor(Date.now() / 1000), 0) : 3600;
+   await redisSet(`blacklisted:${token}`, 'revoked', ttl);
+   res.status(200).send("Logged out successfully");
+ } catch (error) {
+   console.error(error);
+   res.status(401).json({ message: "Invalid or expired token" });
+ }
 };
 
 export const googleOAuth = async (accessToken, refreshToken, profile, done) => {
@@ -182,20 +185,19 @@ export const deleteUserPermanent = async (req, res) => {
 };
 
 export const deleteUserQuick = async (req, res) => {
-    const email = req.body;
-    try{
-        const user = await prisma.user.findUnique({
-            where: email,
+    const { email } = req.body;
+    try {
+        const user = await prisma.user.delete({
+            where: { email }
         });
+
         if (!user) {
-            return res.status(404).json({ message: "User not found deleteUserQuick" });
+            return res.status(404).json({ message: "User not found" });
         }
-        await prisma.user.delete({
-            where: { id: user.id },
-        });
+
         return res.json({ message: "User deleted successfully" });
-    }catch (error) {
+    } catch (error) {
         console.error('Error deleting user:', error);
         return res.status(500).json({ error: 'An error occurred while deleting the user' });
     }
-}
+};
