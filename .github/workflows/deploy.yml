@@ -97,7 +97,7 @@ jobs:
 
       - name: Run Jest Tests
         run: |
-          npm run db:test:setup
+          npm run test:db:setup
           npm run test:migrate
           npm run test:int
         working-directory: ./server
