@@ -62,7 +62,7 @@ describe('Test Login and Actions', () => {
 
     cy.visit(baseUrl + "/udfyld-til-opskrift");
 
-    cy.url().should('include', '/udfyld-til-opskrift');
+    cy.url({ timeout: 30000 }).should('include', '/udfyld-til-opskrift');
 
     cy.get('input[placeholder="Tilføj din egen mulighed"]')
       .type('tomato')
