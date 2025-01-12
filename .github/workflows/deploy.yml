@@ -49,6 +49,11 @@ jobs:
           npm run docker &
         working-directory: ./server
 
+      - name: Wait for Redis to Be Available
+        run: |
+          npx wait-on tcp:localhost:6379
+        working-directory: ./server
+
       - name: Start Backend Server
         run: |
           nohup npm run start & 
