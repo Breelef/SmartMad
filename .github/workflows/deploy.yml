@@ -34,8 +34,8 @@ jobs:
 
       - name: Run Cypress Tests
         run: |
-          npx cypress run --headless --browser chrome --spec 'cypress/e2e/spec.cy.js'
-        working-directory: ./server/tests/cypress
+          npx cypress run --headless --browser chrome --spec './server/tests/cypress/cypress/e2e/spec.cy.js'
+        working-directory: .cypress
 
 
   deploy:
