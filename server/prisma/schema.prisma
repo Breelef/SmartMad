@@ -37,7 +37,7 @@ model UserPrompt {
   createdAt     DateTime             @default(now())
   updatedAt     DateTime             @updatedAt
   deletedAt     DateTime?
-  user          User                 @relation(fields: [userId], references: [id])
+  user          User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   aiResponse    AIResponse?
   aiResponseId  Int?
   modifications RecipeModification[]
@@ -52,7 +52,7 @@ model AIResponse {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   deletedAt             DateTime?
-  userPrompt            UserPrompt             @relation(fields: [userPromptId], references: [id])
+  userPrompt            UserPrompt             @relation(fields: [userPromptId], references: [id], onDelete: Cascade)
   recipes               Recipe[]
   modificationResponses ModificationResponse[]
 
@@ -70,7 +70,7 @@ model Recipe {
   createdAt         DateTime             @default(now())
   updatedAt         DateTime             @updatedAt
   deletedAt         DateTime?
-  aiResponse        AIResponse           @relation(fields: [aiResponseId], references: [id])
+  aiResponse        AIResponse           @relation(fields: [aiResponseId], references: [id], onDelete: Cascade)
   instructions      Instruction[]
   recipeIngredients RecipeIngredient[]
   modifications     RecipeModification[]
@@ -84,14 +84,14 @@ model Recipe {
 model RecipeIngredient {
   recipeId     Int
   ingredientId Int
-  value        Float
-  unit         String
+  value        Float?
+  unit         String?
   comment      String?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   deletedAt    DateTime?
-  recipe       Recipe     @relation(fields: [recipeId], references: [id])
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
   @@id([recipeId, ingredientId])
   @@map("recipeIngredients") // Custom table name for the pivot table
@@ -117,7 +117,7 @@ model Instruction {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
-  recipe    Recipe    @relation(fields: [recipeId], references: [id])
+  recipe    Recipe    @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("instructions")
 }
@@ -130,8 +130,8 @@ model RecipeModification {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   deletedAt             DateTime?
-  recipe                Recipe                 @relation(fields: [recipeId], references: [id])
-  userPrompt            UserPrompt             @relation(fields: [userPromptId], references: [id])
+  recipe                Recipe                 @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  userPrompt            UserPrompt             @relation(fields: [userPromptId], references: [id], onDelete: Cascade)
   modificationResponses ModificationResponse[]
 
   @@map("recipeModifications")
@@ -145,8 +145,8 @@ model ModificationResponse {
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   deletedAt       DateTime?
-  aiResponse      AIResponse         @relation(fields: [aiResponseId], references: [id])
-  modification    RecipeModification @relation(fields: [modificationId], references: [id])
+  aiResponse      AIResponse         @relation(fields: [aiResponseId], references: [id], onDelete: Cascade)
+  modification    RecipeModification @relation(fields: [modificationId], references: [id], onDelete: Cascade)
 
   @@map("modificationResponses")
 }
@@ -156,8 +156,8 @@ model UserRecipe {
   recipeId  Int
   createdAt DateTime @default(now())
 
-  user   User   @relation("UserRecipeUser", fields: [userId], references: [id])
-  recipe Recipe @relation("UserRecipeRecipe", fields: [recipeId], references: [id])
+  user   User   @relation("UserRecipeUser", fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation("UserRecipeRecipe", fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@id([userId, recipeId])
   @@map("userRecipes")

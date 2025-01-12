@@ -1,0 +1,732 @@
+{
+	"info": {
+		"_postman_id": "784c0e80-3170-491b-a9eb-989facdc9e06",
+		"name": "SmartRecipe API test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29879157"
+	},
+	"item": [
+		{
+			"name": "Signup Succesful",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains success message and userId\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.message).to.eql(\"User created successfully\");\r",
+							"    pm.expect(response).to.have.property(\"userId\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"APItestUser@test.com\",\r\n    \"password\":\"APITestUser\",\r\n    \"name\": \"API test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth/signup",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signup Duplicate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", () => {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains duplicate email error message\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.message).to.eql(\"Email already exists\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"APItestUser@test.com\",\r\n    \"password\":\"APITestUser\",\r\n    \"name\": \"API test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth/signup",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signup Missing Fields",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains missing fields message\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.message).to.eql(\"Missing required fields\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"APItestUser@test.com\",\r\n    \"name\": \"API test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth/signup",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is application/json\", () => {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 300ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"accessToken is a valid JWT\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    const tokenParts = response.accessToken.split(\".\");\r",
+							"    pm.expect(tokenParts.length).to.eql(3);\r",
+							"});\r",
+							"\r",
+							"if (response.accessToken) {\r",
+							"    pm.environment.set(\"accessToken\", response.accessToken);\r",
+							"} else {\r",
+							"    pm.expect(response.accessToken).to.exist;\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"APItestUser@test.com\",\r\n    \"password\":\"APITestUser\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth/login",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Verify No token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", () => {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains error message\", () => {\r",
+							"    const jsonResponse = pm.response.json();\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"Access denied, no token provided\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth/verify",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Verify Blacklisted Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", () => {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains error message\", () => {\r",
+							"    const jsonResponse = pm.response.json();\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"Invalid or expired token\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{blacklistedToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth/verify",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Verify Valid token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains valid token data\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.valid).to.eql(true);\r",
+							"    pm.expect(response).to.have.property(\"data\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth/verify",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "firstUserPrompt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"const recipes = response.data.jsonRecipes.recipes;\r",
+							"\r",
+							"// Validate the response status\r",
+							"pm.test(\"Response status is success\", () => {\r",
+							"    pm.expect(response.status).to.eql(\"success\");\r",
+							"});\r",
+							"\r",
+							"// Iterate over each recipe and validate its structure and data\r",
+							"recipes.forEach((recipe, index) => {\r",
+							"    pm.test(`Recipe ${index + 1}: Name exists and is a string`, () => {\r",
+							"        pm.expect(recipe).to.have.property(\"name\").that.is.a(\"string\");\r",
+							"    });\r",
+							"\r",
+							"    pm.test(`Recipe ${index + 1}: Time fields are valid`, () => {\r",
+							"        const time = recipe.time;\r",
+							"        pm.expect(time).to.have.property(\"prep\").that.has.all.keys(\"value\", \"unit\");\r",
+							"        pm.expect(time.prep.value).to.be.a(\"number\");\r",
+							"        pm.expect(time.prep.unit).to.be.a(\"string\");\r",
+							"\r",
+							"        pm.expect(time).to.have.property(\"cook\").that.has.all.keys(\"value\", \"unit\");\r",
+							"        pm.expect(time.cook.value).to.be.a(\"number\");\r",
+							"        pm.expect(time.cook.unit).to.be.a(\"string\");\r",
+							"\r",
+							"        pm.expect(time).to.have.property(\"total\").that.has.all.keys(\"value\", \"unit\");\r",
+							"        pm.expect(time.total.value).to.be.a(\"number\");\r",
+							"        pm.expect(time.total.unit).to.be.a(\"string\");\r",
+							"    });\r",
+							"\r",
+							"    pm.test(`Recipe ${index + 1}: Portions is a number`, () => {\r",
+							"        pm.expect(recipe).to.have.property(\"portions\").that.is.a(\"number\");\r",
+							"    });\r",
+							"\r",
+							"    pm.test(`Recipe ${index + 1}: Ingredients are valid`, () => {\r",
+							"        const ingredients = recipe.ingredients;\r",
+							"        ingredients.forEach((ingredient, i) => {\r",
+							"            pm.expect(ingredient).to.have.property(\"name\").that.is.a(\"string\");\r",
+							"            pm.expect(ingredient).to.have.property(\"value\").that.is.a(\"number\");\r",
+							"            pm.expect(ingredient).to.have.property(\"unit\");\r",
+							"            if(ingredient.unit !== null){\r",
+							"                pm.expect(ingredient.unit).that.is.a(\"string\");\r",
+							"            }\r",
+							"            pm.test(`Recipe ${index + 1}: Ingredient ${i + 1} has a valid comment`, () => \r",
+							"                {\r",
+							"                pm.expect(ingredient).to.have.property(\"comment\");\r",
+							"                if (ingredient.comment !== null) {\r",
+							"                    pm.expect(ingredient.comment).to.be.a(\"string\");\r",
+							"                }\r",
+							"            });\r",
+							"        });\r",
+							"    });\r",
+							"\r",
+							"    pm.test(`Recipe ${index + 1}: Instructions are valid`, () => {\r",
+							"        const instructions = recipe.instructions;\r",
+							"        instructions.forEach((instruction, partIndex) => {\r",
+							"            pm.expect(instruction).to.have.property(\"part\").that.is.a(\"number\");\r",
+							"            pm.expect(instruction).to.have.property(\"titel\").that.is.a(\"string\");\r",
+							"            pm.expect(instruction).to.have.property(\"steps\").that.is.an(\"array\");\r",
+							"            instruction.steps.forEach((step, stepIndex) => {\r",
+							"                pm.expect(step).to.be.a(\"string\");\r",
+							"            });\r",
+							"        });\r",
+							"    });\r",
+							"\r",
+							"    pm.test(`Recipe ${index + 1}: Final comment exists and is valid`, () => {\r",
+							"        pm.expect(recipe).to.have.property(\"final_comment\").that.is.a(\"string\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"savedAiResponseId\", response.data.savedAiResponse.id);\r",
+							"pm.environment.set(\"selectedRecipeData\", JSON.stringify(recipes[0]));\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"ingredients\": [\"kartofler\",\"porre\",\"bacon\"],\r\n    \"willing_to_shop\": true,\r\n    \"comments\": \"Jeg vil gerne lave en cremet ret med disse ingredienser. Jeg kan godt lide løg og hvidløg\",\r\n    \"dietary_restrictions\": [],\r\n    \"cooking_time\": \"any\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/firstUserPrompt",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"firstUserPrompt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "recipeChosen Successful",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Recipe creation response is successful\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains created recipe data\", function () {\r",
+							"    let jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"recipe\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"aiResponseId\": {{savedAiResponseId}},\r\n  \"selectedRecipeData\": {{selectedRecipeData}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/recipeChosen",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"recipeChosen"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout No token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", () => {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains error message\", () => {\r",
+							"    pm.expect(pm.response.text()).to.eql(\"Authentication token is required\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/auth/logout",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout Successful",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.environment.set(\"blacklistedToken\", pm.environment.get(\"blacklistedToken\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response confirms successful logout\", () => {\r",
+							"    pm.expect(pm.response.text()).to.eql(\"Logged out successfully\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/auth/logout",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout Invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", () => {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains error message\", () => {\r",
+							"    const jsonResponse = pm.response.json();\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"Invalid or expired token\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3R1c2VyQHRlc3QuY29tIiwiaWF0IjoxNzM2NDU1asdasdAS23U5LCJleHAiOjE3MzY0NTU5NTl9.FWvrFTo_KP6lBdN_ugOtYJm7CmVwEAxG3StwguNVELU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/auth/logout",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTestUser",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"APItestUser@test.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/API/users/deleteQuick",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"API",
+						"users",
+						"deleteQuick"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "localhost:8080",
+			"type": "default"
+		}
+	]
+}

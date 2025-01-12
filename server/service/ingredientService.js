@@ -27,12 +27,20 @@ export async function createIngredientFromRecipe(ingredients, recipeId){
 export async function attachIngredientToRecipe(ingredient, recipeId, ingredientId) {
     const { value, unit, comment } = ingredient;
     await prisma.recipeIngredient.create({
-        data:{
-            recipeId,
-            ingredientId,
+        data: {
             value,
             unit,
             comment,
+            recipe: {
+                connect: {
+                    id: recipeId
+                }
+            },
+            ingredient: {
+                connect: {
+                    id: ingredientId
+                }
+            }
         }
     });
 }
