@@ -100,7 +100,7 @@ jobs:
       # Start Docker Compose for server if needed
       - name: Start Docker Compose for Server
         run: |
-          docker-compose -f docker-compose.yml up -d
+          docker-compose up
         working-directory: ./ # Adjust directory if needed
 
       # Optional: List files (for debugging)
