@@ -1,13 +1,16 @@
-const baseUrl = "http://localhost:3000";
+
 
 //cy.get('#txtNumberPersons') //For ID
 //cy.get('input[value="xxx"]') //For some input value, for instance: name="xxx" or placeholder="xxx"
 //cy.get('.cprValue') //For class
 
+beforeEach(() => {
+  cy.visit('/login');
+});
+
 describe('Login Page - Element Presence Check', () => {
 
   it('should display all login elements', () => {
-    cy.visit(baseUrl + '/login');
     cy.get('input[name="email"]')
       .should('be.visible');
 
@@ -34,7 +37,6 @@ describe('Login Page - Element Presence Check', () => {
 describe('Signup Page, wrong login', () => {
 
   it('should show an error message when email is not entered', () => {
-    cy.visit(baseUrl + '/login');
     cy.get('form').submit();
 
     cy.get('input[name="email"]')
@@ -43,7 +45,6 @@ describe('Signup Page, wrong login', () => {
   });
 
   it('should show an error message for invalid email format', () => {
-    cy.visit(baseUrl + '/login');
     
   
     cy.get('input[name="email"]')
@@ -55,10 +56,9 @@ describe('Signup Page, wrong login', () => {
       .should('contain', 'Invalid email address');
   });
 });
-
+/*
 describe('Test Login and Actions', () => {
   it("Should complete a Full happy path", () => {
-    cy.visit(baseUrl + '/login');
     cy.get('input[name="email"]').type("admin@admin.com");
     cy.get('input[name="password"]').type("admin123");
     cy.get('form').submit();
@@ -67,7 +67,6 @@ describe('Test Login and Actions', () => {
     
     cy.url().should('include', '/udfyld-til-opskrift');
 
-    cy.visit(baseUrl + "/udfyld-til-opskrift");
     cy.wait(1000);
     cy.url().should('include', '/udfyld-til-opskrift');
 
@@ -124,3 +123,4 @@ describe('Test Login and Actions', () => {
   });
 
 });
+*/

@@ -28,6 +28,12 @@ jobs:
       GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
       REDIS_HOST: ${{ secrets.REDIS_HOST }}
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
     steps:
       - uses: actions/checkout@v4
 
@@ -43,10 +49,22 @@ jobs:
           npm run start & 
         working-directory: ./client/smartmad
 
-
-      - name: Start Docker Compose
+      - name: Start Docker Compose and Wait
         run: |
-          npm run docker
+          npm run docker &
+          npx wait-on tcp:${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}
+          npx wait-on tcp:localhost:6379
+          sleep 10
+        working-directory: ./server
+
+      - name: Seed database
+        run: |
+          npm run initdb
+        working-directory: ./server
+
+      - name: Wait for Redis to Be Available
+        run: |
+          npx wait-on tcp:localhost:6379
         working-directory: ./server
 
       - name: Start Backend Server
@@ -59,11 +77,16 @@ jobs:
           npx wait-on tcp:localhost:8080
           npx wait-on tcp:localhost:3000
 
-      # Step 6: Run Cypress tests
       - name: Run Cypress Tests
         run: |
           npx cypress run --browser chrome --spec './cypress/e2e/spec.cy.js'
+          sleep 10
         working-directory: ./server/tests/cypress
+
+      - name: Stop Docker Compose
+        run: |
+          npm run dockerdown
+        working-directory: ./server
 
   deploy:
     runs-on: ubuntu-latest
@@ -86,7 +109,7 @@ jobs:
       # Start Docker Compose for server if needed
       - name: Start Docker Compose for Server
         run: |
-          npm run docker
+          npm run docker &
         working-directory: ./server
 
       # Optional: List files (for debugging)
