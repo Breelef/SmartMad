@@ -52,7 +52,7 @@
         # Step 3: Start backend server in the background
         - name: Start Backend Server
           run: |
-            nohup npm run start
+            nohup npm run start &
           working-directory: ./server
 
         # Step 5: Run Cypress tests
