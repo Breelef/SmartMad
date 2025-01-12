@@ -54,8 +54,8 @@ jobs:
       # Step 3: Start Docker Compose for services (if any)
       - name: Start Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up -d
-        working-directory: ./ # Adjust directory if needed
+          docker-compose up
+        working-directory: ./server
 
       # Step 4: Wait for Redis to be ready
       - name: Wait for Redis to Start
@@ -101,7 +101,7 @@ jobs:
       - name: Start Docker Compose for Server
         run: |
           docker-compose up
-        working-directory: ./ # Adjust directory if needed
+        working-directory: ./server
 
       # Optional: List files (for debugging)
       - name: List Files
