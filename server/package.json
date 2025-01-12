@@ -17,7 +17,10 @@
     "resetdb": "node database/deletedb.js && node database/createdb.js",
     "initdb": "npm run migrate:dev && npm run seed",
     "migrate": "node database/createdb.js && npm run migrate:prod && node database/grantPrivileges.js",
-    "alldb": "node database/deletedb.js && npm run migrate:dev"
+    "alldb": "node database/deletedb.js && npm run migrate:dev",
+    "test:db:setup": "mysql -h localhost -P 3307 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS smartrecipe_test;'",
+    "test:migrate": "dotenv -e .env.test -- prisma migrate deploy",
+    "test:int": "dotenv -e .env.test -- npm test"
   },
   "keywords": [],
   "author": "",
@@ -38,6 +41,7 @@
     "mongoose": "^8.8.2",
     "mysql2": "^3.11.4",
     "neo4j-driver": "^5.26.0",
+    "newman": "^6.2.1",
     "nodemon": "^3.1.7",
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",

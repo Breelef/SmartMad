@@ -8,23 +8,26 @@ export const generateToken = (email, secret, expiresIn) => {
 export const verifyToken = (token, secret) => {
     try {
         if (typeof token !== 'string' || token.split('.').length !== 3) {
-            throw new Error('Invalid token format');
+            const error = new Error('Invalid token format');
+            console.error(`Error: ${error.message}`); // Changed to use template literal
+            throw error;
         }
 
         return jwt.verify(token, secret);
     } catch (error) {
-        console.error('Error decoding token:', error);
+        console.error(`Error: ${error.message}`); // Changed to use template literal
         throw error;
     }
 };
 
 export const decodeToken = (token) => {
-    try {
-        return jwt.decode(token);
-    } catch (error) {
-        console.error('Error decoding token:', error);
-        throw new Error('Invalid token format');
+    const decoded = jwt.decode(token);
+    if (!decoded) {
+        const error = new Error('Invalid token format');
+        console.error(`Error: ${error.message}`);
+        throw error;
     }
+    return decoded;
 };
 
 export const comparePasswords = async (inputPassword, userPassword) => {
