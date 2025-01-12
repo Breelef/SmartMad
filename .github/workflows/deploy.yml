@@ -28,47 +28,42 @@ jobs:
       GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
       REDIS_HOST: ${{ secrets.REDIS_HOST }}
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
-    services:
-      redis:
-        image: redis:latest
-        ports:
-          - 6379:6379
-        options: --health-cmd "redis-cli -h 127.0.0.1 -p 6379 ping | grep PONG" --health-interval 5s --health-timeout 3s --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
-      # Step 1: Install backend dependencies
       - name: Install Dependencies (Backend)
         run: |
           npm install
           npm install cypress --save-dev
         working-directory: ./server
 
-      # Step 2: Wait for Redis to be ready
-      - name: Wait for Redis to Start
+      - name: Install and Start Frontend
         run: |
-          npx wait-on tcp:localhost:6379
-          
-      # Step 3: Start backend server in the background
-      - name: Start Backend Server
+          npm install
+          npm run start & 
+        working-directory: ./client/smartmad
+
+
+      - name: Start Docker Compose
         run: |
-          nohup npm run start > backend.log 2>&1 &
+          npm run docker
         working-directory: ./server
 
-      - name: Output Backend Logs
+      - name: Start Backend Server
         run: |
-          cat backend.log
+          nohup npm run start & 
+        working-directory: ./server
 
-      # Step 4: Wait for the backend server to be ready
-      - name: Wait for Backend Server to Start
+      - name: Wait for Backend and Frontend
         run: |
-          npx wait-on http://localhost:8080 
-          
-      # Step 5: Run Cypress tests
+          npx wait-on tcp:localhost:8080
+          npx wait-on tcp:localhost:3000
+
+      # Step 6: Run Cypress tests
       - name: Run Cypress Tests
         run: |
-          npx cypress run --headless --browser chrome --spec './server/tests/cypress/cypress/e2e/spec.cy.js'
-        working-directory: .cypress
+          npx cypress run --browser chrome --spec './cypress/e2e/spec.cy.js'
+        working-directory: ./server/tests/cypress
 
   deploy:
     runs-on: ubuntu-latest
@@ -86,6 +81,12 @@ jobs:
       # Server-side test steps
       - name: Install Dependencies (Server)
         run: npm install
+        working-directory: ./server
+
+      # Start Docker Compose for server if needed
+      - name: Start Docker Compose for Server
+        run: |
+          npm run docker
         working-directory: ./server
 
       # Optional: List files (for debugging)
