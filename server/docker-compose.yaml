@@ -10,6 +10,7 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
+      - "3307:3306"
     volumes:
       - ./Server/database:/docker-entrypoint-initdb.d  # Populate MySQL with initial scripts
       - mysql_data:/var/lib/mysql
@@ -27,6 +28,10 @@ services:
 
 volumes:
   mysql_data:
+  mongodb_data:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_import:
 
 networks:
   app_network:
