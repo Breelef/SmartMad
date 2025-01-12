@@ -69,7 +69,7 @@
         # Step 5: Run Cypress tests
         - name: Run Cypress Tests
           run: |
-            npx cypress run --headless --browser chrome --spec './cypress/e2e/spec.cy.js'
+            npx cypress run --browser chrome --spec './cypress/e2e/spec.cy.js'
           working-directory: ./server/tests/cypress
 
     deploy:
