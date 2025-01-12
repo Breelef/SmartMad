@@ -46,7 +46,7 @@ jobs:
 
       - name: Start Docker Compose
         run: |
-          npm run docker
+          npm run docker &
         working-directory: ./server
 
       - name: Start Backend Server
@@ -64,6 +64,12 @@ jobs:
         run: |
           npx cypress run --browser chrome --spec './cypress/e2e/spec.cy.js'
         working-directory: ./server/tests/cypress
+
+      # Step 7: Stop Docker Compose
+      - name: Stop Docker Compose
+        run: |
+          npm run docker down
+        working-directory: ./server
 
   deploy:
     runs-on: ubuntu-latest
@@ -86,7 +92,7 @@ jobs:
       # Start Docker Compose for server if needed
       - name: Start Docker Compose for Server
         run: |
-          npm run docker
+          npm run docker &
         working-directory: ./server
 
       # Optional: List files (for debugging)
