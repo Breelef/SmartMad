@@ -43,10 +43,14 @@ jobs:
           npm run start & 
         working-directory: ./client/smartmad
 
-
       - name: Start Docker Compose
         run: |
           npm run docker &
+        working-directory: ./server
+
+      - name: Seed database
+        run: |
+          npm run seed
         working-directory: ./server
 
       - name: Wait for Redis to Be Available
