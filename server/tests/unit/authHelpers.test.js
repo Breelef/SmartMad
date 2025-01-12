@@ -49,7 +49,8 @@ describe('decodeToken', () => {
   });
 
   it('should throw error for invalid token format', () => {
-    // Mock console.error to suppress logs during the test
+    // Mock jwt.decode to return null for invalid token
+    jwt.decode.mockReturnValue(null);
     console.error = jest.fn();
 
     expect(() => decodeToken('invalid.token')).toThrow('Invalid token format');
