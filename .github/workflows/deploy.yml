@@ -58,7 +58,7 @@ jobs:
       # Step 4: Wait for the backend server to be ready
       - name: Wait for Backend Server to Start
         run: |
-          npx wait-on http://localhost:3000 
+          npx wait-on http://localhost:8080 
           
       # Step 5: Run Cypress tests
       - name: Run Cypress Tests
