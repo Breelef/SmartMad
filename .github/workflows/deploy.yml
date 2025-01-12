@@ -119,7 +119,7 @@ jobs:
         working-directory: ./server
         run: |
           cd PostmanTest
-          newman run API_test.postman_collection.json -e SmartRecipe_API_test.postman_collection.json
+          newman run SmartRecipe_API_test.postman_collection.json -e SmartRecipe.postman_environment.json
 
       - name: Stop Docker
         run: |
