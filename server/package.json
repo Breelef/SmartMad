@@ -8,6 +8,7 @@
     "docker": "docker compose up",
     "dockerdown": "docker compose down",
     "test": "jest",
+    "k6": "cd tests/stressPerformanceTests & docker run -i grafana/k6 run - --summary-export=summary.json < K6Endpoint.test.js",
     "dev": "nodemon server.js",
     "migrate:dev": "npx prisma migrate dev && npx prisma generate",
     "migrate:prod": "npx prisma migrate deploy && npx prisma generate",

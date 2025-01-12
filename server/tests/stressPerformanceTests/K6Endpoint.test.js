@@ -10,7 +10,9 @@ export const options = {
     ],
 };
 
-const baseURL = `http://192.168.1.6:8080`;
+const baseURL = __ENV.BASE_URL || 'http://localhost:8080';
+
+
 
 export function setup() {
     // No "Quick" cleanup needed, we just proceed with the test
