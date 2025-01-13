@@ -13,18 +13,16 @@ export const options = {
 const baseURL = `http://192.168.1.6:8080`; //Ændre til egen IP!
 
 export function setup() {
-    // No "Quick" cleanup needed, we just proceed with the test
+    
 }
 
 export default function () {
-    // Generate a unique email for this iteration
     const uniqueEmail = `test_${__VU}_${Date.now()}@example.com`;
     const testUser = {
         email: uniqueEmail,
         password: 'password123',
         name: 'Test User',
     };
-
     // POST /API/users
     const postResponse = http.post(`${baseURL}/API/users`, JSON.stringify(testUser), {
         headers: { 'Content-Type': 'application/json' },
@@ -32,22 +30,17 @@ export default function () {
     check(postResponse, {
         'POST /API/users - Status 200': (res) => res.status === 200,
     });
-
-    // Sleep to allow time for the user to be created before doing the lookup
-    sleep(2); // Adjust the duration based on how long user creation takes
-
+    sleep(2);
     // GET /API/users
     const getUsersResponse = http.get(`${baseURL}/API/users`);
     check(getUsersResponse, {
         'GET /API/users - Status 200': (res) => res.status === 200,
     });
-
     // GET /API/users/email
     const getEmailResponse = http.get(`${baseURL}/API/users/email?email=${testUser.email}`);
     check(getEmailResponse, {
         'GET /API/users/email - Status 200': (res) => res.status === 200,
     });
-
     // POST /API/users/:id
     const postUpdateResponse = http.post(`${baseURL}/API/users/1`, JSON.stringify({
         email: 'updated@example.com',
@@ -59,7 +52,6 @@ export default function () {
     check(postUpdateResponse, {
         'POST /API/users/1 - Status 200': (res) => res.status === 200,
     });
-
     // DELETE /API/users/delete
     const deleteUserResponse = http.del(`${baseURL}/API/users/delete`, JSON.stringify({ email: uniqueEmail }), {
         headers: { 'Content-Type': 'application/json' },
@@ -67,6 +59,5 @@ export default function () {
     check(deleteUserResponse, {
         'DELETE /API/users/delete - Status 200': (res) => res.status === 200 || res.status === 404,
     });
-
-    sleep(1); // Simulate user waiting time
+    sleep(1);
 }
