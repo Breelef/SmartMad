@@ -198,8 +198,14 @@ const config = {
 // jest.config.mjs
 
 export default {
+  collectCoverage: true,
+  collectCoverageFrom: [
+    "!**/test/**",
+  ],
+  coverageDirectory: "coverage",
+  coverageReporters: ["json", "lcov", "text", "html"],
   testEnvironment: 'node',
   clearMocks: true,
-  transform: {'^.+\\.js$': 'babel-jest',},
+  transform: {'^.+\\.js$': 'babel-jest'},
   setupFilesAfterEnv: process.env.TEST_TYPE === 'integration' ? ['<rootDir>/jest.setup.js'] : [],
 };

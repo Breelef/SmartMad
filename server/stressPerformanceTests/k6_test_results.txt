@@ -743,6 +743,7 @@ default ↓ [ 100% ] 015/150 VUs  4m0s
      ✓ GET /API/users - Status 200
      ✓ GET /API/users/email - Status 200
      ✓ POST /API/users/1 - Status 200
+     
      ✓ DELETE /API/users/delete - Status 200
 
      checks.........................: 100.00% 29655 out of 29655
