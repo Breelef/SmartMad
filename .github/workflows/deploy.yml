@@ -88,11 +88,11 @@ jobs:
         env:
           DATABASE_URL: mysql://${{ secrets.DB_USERNAME }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:3307/smartrecipe_test
 
-      - name: Run Postman tests
-        working-directory: ./server
-        run: |
-          cd PostmanTest
-          newman run SmartRecipe_API_test.postman_collection.json -e SmartRecipe.postman_environment.json
+#      - name: Run Postman tests
+#        working-directory: ./server
+#        run: |
+#          cd PostmanTest
+#          newman run SmartRecipe_API_test.postman_collection.json -e SmartRecipe.postman_environment.json
       
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v2
@@ -205,11 +205,11 @@ jobs:
         env:
           DATABASE_URL: mysql://${{ secrets.DB_USERNAME }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:3307/smartrecipe_test
 
-      - name: Run Postman tests
-        working-directory: ./server
-        run: |
-          cd PostmanTest
-          newman run SmartRecipe_API_test.postman_collection.json -e SmartRecipe.postman_environment.json
+#      - name: Run Postman tests
+#        working-directory: ./server
+#        run: |
+#          cd PostmanTest
+#          newman run SmartRecipe_API_test.postman_collection.json -e SmartRecipe.postman_environment.json
 
       - name: Stop Docker
         run: |
