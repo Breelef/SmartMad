@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dockerdown": "docker compose down",
+    "cypress": "cd tests/cypress &&npx cypress open",
     "docker": "docker compose up",
     "test": "jest --coverage",
     "k6": "cd stressPerformanceTests & docker run -i grafana/k6 run - < K6Endpoint.test.js > k6_test_results.txt",
