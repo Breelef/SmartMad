@@ -24,9 +24,11 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+        working-directory: ./server
 
       - name: Run Tests
         run: npm test -- --coverage
+        working-directory: ./server
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v2
