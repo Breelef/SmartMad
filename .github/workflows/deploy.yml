@@ -111,8 +111,8 @@ jobs:
           docker compose down
         working-directory: ./server
 
-  cypress:
-    name: Cypress Tests
+  tests:
+    name: CI Tests
     runs-on: ubuntu-latest
     env:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

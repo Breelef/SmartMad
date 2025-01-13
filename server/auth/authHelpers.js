@@ -6,6 +6,7 @@ export const generateToken = (email, secret, expiresIn) => {
 };
 
 export const verifyToken = (token, secret) => {
+
     try {
         if (typeof token !== 'string' || token.split('.').length !== 3) {
             const error = new Error('Invalid token format');
