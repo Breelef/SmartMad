@@ -11,13 +11,13 @@
     "test": "jest --coverage",
     "k6": "cd stressPerformanceTests & docker run -i grafana/k6 run - < K6Endpoint.test.js > k6_test_results.txt",
     "dev": "nodemon server.js",
-    "migrate:dev": "npx prisma migrate dev && npx prisma generate",
+    "migrate:dev": "npx prisma migrate",
     "migrate:prod": "npx prisma migrate deploy && npx prisma generate",
-    "seed": "node seeders/mysqlseeder.js && node database/storedFunctions.js",
+    "seed": "node seeders/mysqlseeder.js",
     "reset": "npm run resetdb && npm run migrate:dev && npm run seed",
     "resetdb": "node database/deletedb.js && node database/createdb.js",
     "initdb": "npm run migrate:dev && npm run seed",
-    "migrate": "node database/createdb.js && npm run migrate:prod && node database/grantPrivileges.js",
+    "migrate": "npm run migrate:prod",
     "alldb": "node database/deletedb.js && npm run migrate:dev",
     "test:db:setup": "mysql -h 127.0.0.1 --protocol=TCP -P 3307 -u root -p password -e 'CREATE DATABASE IF NOT EXISTS smartrecipe_test;'",
     "test:migrate": "dotenv -e .env.test -- prisma migrate deploy",
@@ -30,6 +30,7 @@
     "@faker-js/faker": "^9.2.0",
     "@google/generative-ai": "^0.21.0",
     "@prisma/client": "^6.2.1",
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -65,3 +66,5 @@
     "supertest": "^7.0.0"
   }
 }
+
+
