@@ -2,6 +2,7 @@
 builder = "NIXPACKS"
 
 [deploy]
+install = "npm install"
 startCommand = "npm start"
 restartPolicyType = "ON_FAILURE"
 
