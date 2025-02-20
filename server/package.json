@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dockerdown": "docker compose down",
+    "start": "node server.js",
     "cypress": "cd tests/cypress &&npx cypress open",
     "docker": "docker compose up",
     "test": "jest --coverage",
