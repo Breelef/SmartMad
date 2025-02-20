@@ -1,8 +1,0 @@
-[service]
-name = "frontend-service"
-build = "npm install && npm run build"
-start = "npx serve -s build"
-env = "production"
-
-[deploy]
-restartPolicyType = "ON_FAILURE"

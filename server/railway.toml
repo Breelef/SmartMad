@@ -1,8 +1,0 @@
-[service]
-name = "backend-service"
-build = "npm install"
-start = "npm start"
-env = "production"
-
-[deploy]
-restartPolicyType = "ON_FAILURE
