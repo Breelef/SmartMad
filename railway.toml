@@ -1,5 +1,6 @@
 [[services]]
 name = "backend"
 root = "./server"
+install = "npm install"
 build = "npm install"
 start = "npm start"
