@@ -18,6 +18,7 @@
     "reset": "npm run resetdb && npm run migrate:dev && npm run seed",
     "resetdb": "node database/deletedb.js && node database/createdb.js",
     "initdb": "npm run migrate:dev && npm run seed",
+    "initdbProd": "npm run migrate:prod && npm run seed",
     "migrate": "npm run migrate:prod",
     "alldb": "node database/deletedb.js && npm run migrate:dev",
     "test:db:setup": "mysql -h 127.0.0.1 --protocol=TCP -P 3307 -u root -p password -e 'CREATE DATABASE IF NOT EXISTS smartrecipe_test;'",
