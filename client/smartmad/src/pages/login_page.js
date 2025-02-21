@@ -27,7 +27,7 @@ export const LoginPage = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await fetch("https://smartmad.railway.internal:8080/auth/login", {
+        const response = await fetch("https://smartmad-production.up.railway.app/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

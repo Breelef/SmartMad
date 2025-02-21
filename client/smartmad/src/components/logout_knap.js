@@ -7,7 +7,7 @@ export const LogoutButton = () => {
     try {
       const token = localStorage.getItem("accessToken");
 
-      const response = await fetch("https://smartmad.railway.internal:8080/auth/logout", {
+      const response = await fetch("https://smartmad-production.up.railway.app/auth/logout", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

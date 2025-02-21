@@ -49,7 +49,7 @@ export const ClearOut = () => {
     const token = localStorage.getItem("accessToken");
     console.log('Data to submit:', JSON.stringify(data));
 
-    fetch('https://smartmad.railway.internal/firstUserPrompt', {
+    fetch('https://smartmad-production.up.railway.app/firstUserPrompt', {
         method: 'POST',
         headers: {
             "Authorization": `Bearer ${token}`,
