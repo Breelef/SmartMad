@@ -16,13 +16,13 @@ async function initializeAI() {
 }
 
 // Read JSON files
-export function readJSONFile(filename) {
-  const filePath = path.resolve(__dirname, 'server/AI/JSON', filename);
+export function readJSONFile() {
+  const filePath = path.resolve('./JSON/JSONstructureOutputSkeleton.json');
   try {
     const data = fs.readFileSync(filePath, 'utf-8');
     return JSON.parse(data);
   } catch (err) {
-    console.error(`Error reading or parsing the file ${filename}:`, err);
+    console.error(`Error reading or parsing the file`, err);
     return null;
   }
 }
@@ -34,7 +34,7 @@ function cleanText(rawText) {
 
 export async function generateRecipe(userJSON) {
   const model = await initializeAI();
-  const outputStructure = readJSONFile("JSONstructureOutputSkeleton.json");
+  const outputStructure = readJSONFile();
 
   if (!outputStructure) {
     throw new Error("Failed to read input or output JSON files");
