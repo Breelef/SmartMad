@@ -28,7 +28,7 @@ export const SignupPage = () => {
         validationSchema,
         onSubmit: async (values) => {
             try {
-                const response = await fetch("http://localhost:8080/auth/signup", {
+                const response = await fetch("https://smartmad.railway.internal:8080/auth/signup", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(values),

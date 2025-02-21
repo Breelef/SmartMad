@@ -20,7 +20,7 @@ export const FindOpskriftPage = () => {
   const handleRecipeChoice = async (selectedRecipeData) => {
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await fetch('http://localhost:8080/recipeChosen', {
+      const response = await fetch('https://smartmad.railway.internal:8080/recipeChosen', {
         method: 'POST',
         headers: {
           "Authorization": `Bearer ${token}`,

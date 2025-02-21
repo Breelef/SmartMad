@@ -28,8 +28,7 @@ export const ChosenRecipePage = () => {
         };
 
         console.log("Sending data: (log in chosen_recipe.js)", data);
-
-        fetch('http://localhost:8080/generateRecipeResponse', {
+        fetch('https://smartmad.railway.internal:8080/generateRecipeResponse', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

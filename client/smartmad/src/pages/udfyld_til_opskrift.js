@@ -50,7 +50,7 @@ export const UdfyldTilOpskrift = () => {
         const token = localStorage.getItem("accessToken");
         console.log('Data to submit:', JSON.stringify(data));
 
-        fetch('http://localhost:8080/firstUserPrompt', {
+        fetch('https://smartmad.railway.internal:8080/firstUserPrompt', {
             method: 'POST',
             headers: {
                 "Authorization": `Bearer ${token}`,
