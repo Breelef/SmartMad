@@ -18,69 +18,67 @@ const dbConfig = {
 };
 
 async function setupDatabase() {
-  const connection = await mysql.createConnection(process.env.DATABASE_URL);
-
-  // Ensure we're using the correct database
-  await connection.query('CREATE DATABASE IF NOT EXISTS smartrecipe');
-  await connection.query('USE smartrecipe');
+  const connection = await mysql.createConnection(dbConfig);
 
   try {
     console.log('Setting up database and users...');
 
-    // Initial database and user setup
+    // Ensure database exists
+    await connection.query('CREATE DATABASE IF NOT EXISTS smartrecipe');
+    await connection.query('USE smartrecipe');
+
+    // Drop existing users safely
     await connection.query(`
-      -- Create the database if it doesn't exist
-      CREATE DATABASE IF NOT EXISTS smartrecipe;
-      USE smartrecipe;
-      
-      -- Drop existing users
-      DROP USER IF EXISTS 'admin'@'${dbConfig.host}';
-      DROP USER IF EXISTS 'read_only_user'@'${dbConfig.host}';
-      DROP USER IF EXISTS 'restricted_user'@'${dbConfig.host}';
-      DROP USER IF EXISTS 'app_user'@'${dbConfig.host}';
-      
-      -- Create users
-      CREATE USER 'admin'@'${dbConfig.host}' IDENTIFIED BY 'admin_password';
-      CREATE USER 'read_only_user'@'${dbConfig.host}' IDENTIFIED BY 'read_only_password';
-      CREATE USER 'restricted_user'@'${dbConfig.host}' IDENTIFIED BY 'restricted_password';
-      CREATE USER 'app_user'@'${dbConfig.host}' IDENTIFIED BY 'app_user_password';
-      
-      -- Grant privileges
-      GRANT ALL PRIVILEGES ON smartrecipe.* TO 'admin'@'${dbConfig.host}';
-      GRANT SELECT ON smartrecipe.* TO 'read_only_user'@'${dbConfig.host}';
+      DROP USER IF EXISTS 'admin'@'%';
+      DROP USER IF EXISTS 'read_only_user'@'%';
+      DROP USER IF EXISTS 'restricted_user'@'%';
+      DROP USER IF EXISTS 'app_user'@'%';
+    `);
+
+    // Create users with explicit authentication
+    await connection.query(`
+      CREATE USER 'admin'@'%' IDENTIFIED WITH mysql_native_password BY 'admin_password';
+      CREATE USER 'read_only_user'@'%' IDENTIFIED WITH mysql_native_password BY 'read_only_password';
+      CREATE USER 'restricted_user'@'%' IDENTIFIED WITH mysql_native_password BY 'restricted_password';
+      CREATE USER 'app_user'@'%' IDENTIFIED WITH mysql_native_password BY 'app_user_password';
+    `);
+
+    // Grant privileges
+    await connection.query(`
+      GRANT ALL PRIVILEGES ON smartrecipe.* TO 'admin'@'%';
+      GRANT SELECT ON smartrecipe.* TO 'read_only_user'@'%';
       
       -- App user privileges
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.users TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.userPrompts TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.aiResponses TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.ingredients TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.instructions TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.modificationResponses TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipeIngredients TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipeModifications TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipes TO 'app_user'@'${dbConfig.host}';
-      GRANT SELECT, INSERT, UPDATE ON smartrecipe.userRecipes TO 'app_user'@'${dbConfig.host}';
-      
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.users TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.userPrompts TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.aiResponses TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.ingredients TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.instructions TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.modificationResponses TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipeIngredients TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipeModifications TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.recipes TO 'app_user'@'%';
+      GRANT SELECT, INSERT, UPDATE ON smartrecipe.userRecipes TO 'app_user'@'%';
+
       -- Restricted user privileges
-      GRANT SELECT ON smartrecipe.users TO 'restricted_user'@'${dbConfig.host}';
-      GRANT SELECT ON smartrecipe.userPrompts TO 'restricted_user'@'${dbConfig.host}';
-      
+      GRANT SELECT ON smartrecipe.users TO 'restricted_user'@'%';
+      GRANT SELECT ON smartrecipe.userPrompts TO 'restricted_user'@'%';
+
       FLUSH PRIVILEGES;
     `);
 
     console.log('Database and users created successfully');
 
-    // Create function
-    await connection.query(`DROP FUNCTION IF EXISTS total_time;`);
+    // Drop and recreate function
+    await connection.query(`DROP FUNCTION IF EXISTS total_time`);
     await connection.query(`
       CREATE FUNCTION total_time(prep INT, cook INT) 
-      RETURNS INT
-      DETERMINISTIC
+      RETURNS INT DETERMINISTIC
       RETURN prep + cook;
     `);
 
-    // Create procedure
-    await connection.query(`DROP PROCEDURE IF EXISTS get_recipe_by_id;`);
+    // Drop and recreate procedure
+    await connection.query(`DROP PROCEDURE IF EXISTS get_recipe_by_id`);
     await connection.query(`
       CREATE PROCEDURE get_recipe_by_id(IN recipe_id INT)
       BEGIN
@@ -88,8 +86,8 @@ async function setupDatabase() {
       END;
     `);
 
-    // Create trigger
-    await connection.query(`DROP TRIGGER IF EXISTS before_recipe_update;`);
+    // Drop and recreate trigger
+    await connection.query(`DROP TRIGGER IF EXISTS before_recipe_update`);
     await connection.query(`
       CREATE TRIGGER before_recipe_update
       BEFORE UPDATE ON recipes
@@ -97,32 +95,13 @@ async function setupDatabase() {
       SET NEW.updatedAt = NOW();
     `);
 
-    await connection.query(`DROP TRIGGER IF EXISTS recipe_after_insert;`);
-    await connection.query(`
-      CREATE TRIGGER recipe_after_insert 
-      AFTER INSERT ON recipes
-      FOR EACH ROW
-      BEGIN
-          INSERT INTO recipeAuditLogs (recipeId, action, changedData, changedAt)
-          VALUES (
-              NEW.id, 
-              'INSERT', 
-              JSON_OBJECT(
-                  'name', NEW.name,
-                  'portionSize', NEW.portionSize,
-                  'aiResponseId', NEW.aiResponseId,
-                  'createdAt', NEW.createdAt
-              ),
-              NOW()
-          );
-      END
-    `);
+    await connection.query(`DROP TRIGGER IF EXISTS recipe_after_insert`);
 
     // Enable event scheduler
-    await connection.query(`SET GLOBAL event_scheduler = ON;`);
+    await connection.query(`SET GLOBAL event_scheduler = ON`);
 
     // Drop and recreate view
-    await connection.query(`DROP VIEW IF EXISTS recipe_times;`);
+    await connection.query(`DROP VIEW IF EXISTS recipe_times`);
     await connection.query(`
       CREATE VIEW recipe_times AS
       SELECT 
@@ -133,7 +112,7 @@ async function setupDatabase() {
     `);
 
     // Drop and recreate event
-    await connection.query(`DROP EVENT IF EXISTS delete_old_deleted_recipes;`);
+    await connection.query(`DROP EVENT IF EXISTS delete_old_deleted_recipes`);
     await connection.query(`
       CREATE EVENT delete_old_deleted_recipes
       ON SCHEDULE EVERY 1 DAY
@@ -144,7 +123,6 @@ async function setupDatabase() {
     `);
 
     console.log('Database functions, procedures, triggers, views, and events created successfully');
-
   } catch (error) {
     console.error('Error setting up database:', error);
     throw error;
@@ -152,6 +130,7 @@ async function setupDatabase() {
     await connection.end();
   }
 }
+
 
 async function seed() {
   try {
