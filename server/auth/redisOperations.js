@@ -2,11 +2,7 @@ import Redis from 'ioredis';
 import dotenv from "dotenv";
 
 dotenv.config({path: "../"})
-export const redis = new Redis({
-    port: process.env.REDIS_PORT,
-    host: process.env.REDIS_HOST,
-    password: process.env.REDIS_PASSWORD,
-})
+export const redis = new Redis(process.env.REDIS_URL)
 
 /**
  * Sets a value in Redis with an expiration time.
