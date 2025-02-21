@@ -17,7 +17,7 @@ async function initializeAI() {
 
 // Read JSON files
 export function readJSONFile() {
-  const filePath = path.join(__dirname, 'server', 'AI', 'JSON', 'JSONstructureOutputSkeleton.json');
+  const filePath = path.join('server', 'AI', 'JSON', 'JSONstructureOutputSkeleton.json');
   try {
     const data = fs.readFileSync(filePath, 'utf-8');
     return JSON.parse(data);
