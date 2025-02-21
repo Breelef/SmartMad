@@ -9,6 +9,13 @@ dotenv.config();
 const prisma = new PrismaClient();
 
 // Use DB_HOST from environment variables, defaulting to localhost if not set.
+const dbConfig = {
+  host: process.env.DB_HOST || 'localhost',
+  user: 'root',
+  password: process.env.DB_PASSWORD || 'password',
+  port: 3306,
+  multipleStatements: true,
+};
 
 async function setupDatabase() {
   const connection = await mysql.createConnection(process.env.DATABASE_URL);
