@@ -18,7 +18,7 @@ const dbConfig = {
 };
 
 async function setupDatabase() {
-  const connection = await mysql.createConnection(dbConfig);
+  const connection = await mysql.createConnection(process.env.DATABASE_URL);
 
   try {
     console.log('Setting up database and users...');
